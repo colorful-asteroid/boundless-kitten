@@ -18,4 +18,4 @@ Unit Testing: Mocha, Chai
 Integration Testing: Sinon, Supertest
 
 Roadmap
-Expect future updates to include multiple SJ-ing sound clips and special FX.
+Expect future updates to include multiple DJ-ing sound clips and special FX.
