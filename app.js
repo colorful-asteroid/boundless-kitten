@@ -1,12 +1,15 @@
 var express = require('express');
 var path = require('path');
+var mongoose = require('mongoose');
 var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var fs = require('fs');
 
 var routes = require('./routes/index');
-// var users = require('./routes/users');
+var users = require('./routes/users');
+var posts = require('./routes/posts');
 
 var app = express();
 
@@ -24,7 +27,8 @@ app.use(require('less-middleware')(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', routes);
-// app.use('/users', users);
+app.use('/users', users);
+app.use('/posts', posts);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -45,7 +49,29 @@ if (app.get('env') === 'development') {
       error: err
     });
   });
+  mongoose.connect('mongodb://55.55.55.5/mongo')
 }
+
+// define a model
+// mongoose.model('users', {name: String});
+// mongoose.model('posts', {content: String});
+
+//load all files in models directory
+fs.readdirSync(__dirname + '/moddels').forEach(function(filename){
+  if(~filename.indexOf('.js')) require(__dirname + '/models/' + filename)
+});
+
+app.get('/users', function(req, res) {
+  mongoose.model('users').find(function(err, users) {
+    res.send(users);
+  })
+})
+
+app.get('/posts/:userId', function(req, res) {
+  mongoose.model('posts').find(user: req.params.userId) {
+    res.send(users);
+  })
+})
 
 // production error handler
 // no stacktraces leaked to user
