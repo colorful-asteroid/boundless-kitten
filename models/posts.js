@@ -10,3 +10,22 @@ var postsSchema = new Schema({
 });
 
 mongoose.model('posts', postsSchema)
+
+/*
+
+(1) modify this to be our database
+
+
+modify to something like this:
+
+var trackSchema = new Schema({
+  track: String,
+  user: {
+    type: Schema.ObjectId,
+    ref: 'users'
+  }
+  more things here: ...
+});
+
+
+*/

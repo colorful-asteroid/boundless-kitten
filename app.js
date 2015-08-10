@@ -1,24 +1,28 @@
+/* Module dependencies */
 var express = require('express');
+var routes = require('./routes/index');
+var users = require('./routes/users');
+var http = require('http')
 var path = require('path');
 var mongoose = require('mongoose');
+var fs = require('fs');
+
+var app = express();
+
+var posts = require('./routes/posts');
 var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-var fs = require('fs');
 
-var routes = require('./routes/index');
-var users = require('./routes/users');
-var posts = require('./routes/posts');
-
-var app = express();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hjs');
 console.log('i am running!!');
+
 // uncomment after placing your favicon in /public
-//app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
+// app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -49,12 +53,12 @@ if (app.get('env') === 'development') {
       error: err
     });
   });
+  
   mongoose.connect('mongodb://55.55.55.5/mongo')
+  // mongoose.connect('mongodb://heroku_sxb8blzn:heroku_sxb8blzn@ds031213.mongolab.com:31213/heroku_sxb8blzn')
 }
 
-// define a model
-// mongoose.model('users', {name: String});
-// mongoose.model('posts', {content: String});
+
 
 //load all files in models directory
 fs.readdirSync(__dirname + '/models').forEach(function(filename){
@@ -69,7 +73,7 @@ app.get('/users', function(req, res) {
 
 app.get('/posts/:userId', function(req, res) {
   mongoose.model('posts').find({user: req.params.userId}, function(err, posts){
-    mongoose.model('posts').populate(posts, {path: 'user'}, function(err, posts){
+    mongoose.model('posts').populate(posts, {path: 'posts'}, function(err, posts){
       res.send(posts);
     })
   })
