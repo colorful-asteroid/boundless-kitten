@@ -1,19 +1,34 @@
-var mocha = require("mocha");
-var chai = require("chai");
-var assert = require("assert");
-var expect = require("chai").expect;
+var request = require('request');
+var mocha = require('mocha');
+var chai = require('chai');
+var assert = require('assert');
+var expect = require('chai').expect;
 
-describe('Array', function() {
-  describe('#indexOf()', function () {
-    it('should return -1 when the value is not present', function () {
-      assert.equal(-1, [1,2,3].indexOf(5));
-      assert.equal(-1, [1,2,3].indexOf(0));
+var server = require('../bin/www').server;
+
+describe('API', function() {
+  describe('Endpoints Exist', function() {
+    
+    it('should respond to GET requests for "/" with a 200 status code', function(done) {
+      request('http://127.0.0.1:3000/', function(error, response, body) {
+        expect(response.statusCode).to.equal(200);
+        done();
+      });
     });
 
-    it('should do some shit', function(){
-
-      expect(2).to.equal(2);
-      
+    it('should respond to GET requests for "/tracks" with a 200 status code', function(done) {
+      request('http://127.0.0.1:3000/tracks', function(error, response, body) {
+        expect(response.statusCode).to.equal(200);
+        done();
+      });
     });
+
+    it('should respond to GET requests for "/track" with a 200 status code', function(done) {
+      request('http://127.0.0.1:3000/track', function(error, response, body) {
+        expect(response.statusCode).to.equal(200);
+        done();
+      });
+    });
+    
   });
 });
