@@ -1,0 +1,28 @@
+{
+  "name": "boundless-kitten",
+  "version": "0.0.0",
+  "homepage": "https://github.com/boundless-kitten/boundless-kitten",
+  "authors": [
+    "Claire",
+    "Glenn",
+    "Marc",
+    "Vy"
+  ],
+  "description": "kickass turntables",
+  "main" : "spec/index.html",
+  "license": "COPYRIGHT",
+  "priavte": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "~2.1.0",
+    "underscore": "~1.6.0",
+    "chai": "~1.9.1",
+    "mocha": "~1.18.2"
+  }
+}
