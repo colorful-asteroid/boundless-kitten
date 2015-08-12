@@ -1,7 +1,7 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
-//sets up the structure of the Song db
+// sets up the structure of the Song db
 var songSchema = new Schema({
   title: String,
   genre: String,
@@ -11,9 +11,7 @@ var songSchema = new Schema({
 // not exactly sure what this does, but the docs say to do it
 var Song = mongoose.model('Song', songSchema);
 
-
-
-//sets up the structure of the Song db
+// sets up the structure of the Song db
 var userSchema = new Schema({
   name: String
 });
