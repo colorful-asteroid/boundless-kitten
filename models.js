@@ -19,7 +19,6 @@ var userSchema = new Schema({
 // not exactly sure what this does, but the docs say to do it
 var User = mongoose.model('User', userSchema);
 
-
 //sample dummy data
 // var titanicTS = new Song({
 //   title: 'My Heart Will Go On',
@@ -35,4 +34,5 @@ var User = mongoose.model('User', userSchema);
 //export to use in the dbconnection file
 exports.Song = Song;
 exports.User = User;
+
 // assuming theres a model User
