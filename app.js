@@ -5,6 +5,12 @@ var dbconnection = require('./dbconnection.js');
 var Library = require('./dbconnection.js').Library;
 var app = express();
 
+/**
+ * Get port from environment and store in Express.
+ */
+
+var port = process.env.PORT || '3000';
+
 //========================================================//
 //   ROUTES                                               //
 //========================================================//
@@ -21,7 +27,6 @@ app.get('/songs', function(req, res) {
     if (err) {
       throw err;
     } else {
-      console.log('THIS! IS! ARGUMEEENNTTSS!!', arguments);
       res.send(data);
     }
   });
@@ -30,9 +35,8 @@ app.get('/songs', function(req, res) {
 //========================================================//
 //   Calling the Server                                   //
 //========================================================//
-var server = app.listen(3000, function() {
+var server = app.listen(port, function() {
   var host = server.address().address;
-  var port = server.address().port;
 
   console.log('Example app listening at http://%s:%s -- %s', host, port, 'somecrap');
 });
