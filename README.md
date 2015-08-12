@@ -4,10 +4,10 @@
 
 [![Throughput Graph](https://graphs.waffle.io/boundless-kitten/boundless-kitten/throughput.svg)](https://waffle.io/boundless-kitten/boundless-kitten/metrics)
 
-Usage
+# Usage
 Liven up a party with this simple DIY DJ-app. Use a crossfader in between songs. Search the libraries from soundcloud's API and build your own libarary and playlists.
 
-Dependencies<
+Dependencies
 Node.js
 Express.js
 Mongo.db
