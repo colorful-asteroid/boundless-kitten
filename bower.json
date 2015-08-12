@@ -11,7 +11,7 @@
   "description": "kickass turntables",
   "main" : "spec/index.html",
   "license": "COPYRIGHT",
-  "priavte": true,
+  "private": true,
   "ignore": [
     "**/.*",
     "node_modules",
