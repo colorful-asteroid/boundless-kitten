@@ -92,8 +92,8 @@ describe('Instances', function() {
       expect(libraryView).to.be.an('object');
     });
 
-    it('"libraryView" should be an instance of "LibraryView"', function() {
-      expect(libraryView).to.be.instanceOf(LibraryView);
+    it('"libraryView" should be an instance of "LibraryCollectionView"', function() {
+      expect(libraryView).to.be.instanceOf(LibraryCollectionView);
     });
 
     //

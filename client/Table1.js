@@ -1,41 +1,93 @@
 //left turntable
 
-// model for songs
+// MODELS
 var SongModel = Backbone.Model.extend({
 
 });
 
+// COLLECTIONS
+var LibraryCollection = Backbone.Collection.extend({
+  model: SongModel
+});
+
+var QueueCollection = Backbone.Collection.extend({
+  model: SongModel
+});
+
 // collection : group of models
-var Songs = Backbone.Collection.extend({
-  model: Song
-});
+// var Songs = Backbone.Collection.extend({
+//   model: Song
+// });
 
+// VIEWS
 // view: render the models
-var SongView = Backbone.View.extend({
-  tagName: "tr",
 
-  render: function(){
-    this.$el.html(this.model.get("title"));
-    return this;
-  }
+var LibrarySongView = Backbone.View.extend({
 
 });
 
-//correlates to the 'Songs' collection
+var LibraryCollectionView = Backbone.View.extend({
 
-var SongsView = Backbone.View.extend({
-
-  render: function(){
-    //keep 'this' keyword in context
-    var that = this;
-
-    //iterate through songs
-    this.model.each(function(song){
-      var songView = new SongView({ model: song });
-      that.$el.append(songView.render().$el);
-    });
-  }
 });
+
+var QueueSongView = Backbone.View.extend({
+
+});
+
+var QueueCollectionView = Backbone.View.extend({
+
+});
+
+var PlayerView = Backbone.View.extend({
+
+});
+
+// COLLECTION INSTANCES
+
+var library = new LibraryCollection();
+
+var queueA = new QueueCollection();
+
+var queueB = new QueueCollection();
+
+// VIEW INSTANCES
+
+var libraryView = new LibraryCollectionView();
+
+var queueViewA = new QueueCollectionView();
+
+var queueViewB = new QueueCollectionView();
+
+var playerViewA = new PlayerView();
+
+var playerViewB = new PlayerView();
+
+
+// var SongView = Backbone.View.extend({
+//   tagName: "tr",
+
+//   render: function(){
+//     this.$el.html(this.model.get("title"));
+//     return this;
+//   }
+
+// });
+
+// //correlates to the 'Songs' collection
+
+// var SongsView = Backbone.View.extend({
+
+//   render: function(){
+//     //keep 'this' keyword in context
+//     var that = this;
+
+//     //iterate through songs
+//     this.model.each(function(song){
+//       var songView = new SongView({ model: song });
+//       that.$el.append(songView.render().$el);
+//     });
+//   }
+// });
 
 
 // adding song data to the models
