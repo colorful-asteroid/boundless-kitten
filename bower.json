@@ -9,7 +9,7 @@
     "Vy"
   ],
   "description": "kickass turntables",
-  "main" : "spec/index.html",
+  "main": "spec/index.html",
   "license": "COPYRIGHT",
   "private": true,
   "ignore": [
@@ -23,6 +23,10 @@
     "jquery": "~2.1.0",
     "underscore": "~1.6.0",
     "chai": "~1.9.1",
-    "mocha": "~1.18.2"
+    "mocha": "~1.18.2",
+    "backbone": "~1.2.1"
+  },
+  "resolutions": {
+    "underscore": ">=1.7.0"
   }
 }

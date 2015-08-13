@@ -2,7 +2,7 @@
 
 var PlayerView = Backbone.View.extend({
 
-  el: "<audio controls preload auto />'"
+  el: "<audio controls preload auto />'",
 
   id: "player",
 
@@ -15,7 +15,7 @@ var PlayerView = Backbone.View.extend({
   },
 
   initiazlize: function() {
-    
+
     this.render();
 
   },
@@ -35,10 +35,4 @@ var playerView = new PlayerView({
 
 playerView.render();
 
-console.log('#####: ',playerView);
-
-
-
-
-
-
+console.log('#####: ', playerView);
