@@ -4,7 +4,10 @@ var express = require('express');
 var dbconnection = require('./dbconnection.js');
 var Library = require('./dbconnection.js').Library;
 var app = express();
-
+var url = require('./reqHandler.js').url;
+// var db = require('./reqHandler.js').db;
+// var gfs = require('./reqHandler.js').gfs;
+// var writeStream = require('./reqHandler.js').writeStream;
 /**
  * Get port from environment and store in Express.
  */
