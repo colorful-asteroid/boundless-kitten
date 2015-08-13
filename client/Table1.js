@@ -1,7 +1,7 @@
 //left turntable
 
 // model for songs
-var Song = Backbone.Model.extend({
+var SongModel = Backbone.Model.extend({
 
 });
 

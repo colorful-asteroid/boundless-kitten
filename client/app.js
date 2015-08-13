@@ -1,42 +1,46 @@
 //working on player view
 
-var PlayerView = Backbone.View.extend({
+var PlayerModel = Backbone.Model.extend({
 
-  el: "<audio controls preload auto />",
+});
 
-  id: "#player",
+// var PlayerView = Backbone.View.extend({
 
-  events: {
+//   el: "<audio controls preload auto />",
 
-    'click': function() {
-      // this.model.play();
-      alert('hi')
-    }
+//   id: "#player",
 
-  },
+//   events: {
 
-  initiazlize: function() {
+//     'click': function() {
+//       // this.model.play();
+//       alert('hi')
+//     }
+
+//   },
+
+//   initiazlize: function() {
     
-    this.render();
+//     this.render();
 
-  },
+//   },
 
-  render: function() {
+//   render: function() {
 
-    return this;
+//     return this;
 
-  }
+//   }
 
 
-});
+// });
 
-var playerView = new PlayerView({
-  el: '#test'
-});
+// var playerView = new PlayerView({
+//   el: '#test'
+// });
 
-playerView.render();
+// playerView.render();
 
-console.log('#####: ',playerView);
+// console.log('#####: ',playerView);
 
 
 
