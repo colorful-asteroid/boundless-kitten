@@ -2,14 +2,15 @@
 
 var PlayerView = Backbone.View.extend({
 
-  el: "<audio controls preload auto />'"
+  el: "<audio controls preload auto />",
 
-  id: "player",
+  id: "#player",
 
   events: {
 
     'click': function() {
-      this.model.play();
+      // this.model.play();
+      alert('hi')
     }
 
   },
