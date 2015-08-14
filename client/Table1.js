@@ -24,22 +24,24 @@ var QueueCollection = Backbone.Collection.extend({
 
 var LibrarySongView = Backbone.View.extend({
   tagName: 'tr',
-  initialize: function(model) {
+  initialize: function(model, queueA, queueB) {
     this.model = model;
+    this.queueA = queueA;
+    this.queueB = queueB;
     this.render();
   },
   render: function() {
-    
+    var that = this;
     var queueBtnA = $('<input type="button" value="QueueA"></input>');
     queueBtnA.click(function() {
-      console.log('someshit');
+      that.queueA.add(that.model.clone());
     });
     var tdA = $('<td>');
     tdA.append(queueBtnA);
 
     var queueBtnB = $('<input type="button" value="QueueB"></input>');
     queueBtnB.click(function() {
-      console.log('someshit other shit');
+      that.queueB.add(that.model.clone());
     });
     var tdB = $('<td>');
     tdB.append(queueBtnB);
@@ -56,14 +58,16 @@ var LibrarySongView = Backbone.View.extend({
 
 var LibraryCollectionView = Backbone.View.extend({
   tagName: 'table',
-  initialize: function(container, collection) {
+  initialize: function(container, collection, queueA, queueB) {
     this.collection = collection;
+    this.queueA = queueA;
+    this.queueB = queueB;
     container.append(this.$el);
     this.render();
   },
   render: function() {
     this.collection.each(function(item) {
-      var song = new LibrarySongView(item);
+      var song = new LibrarySongView(item, this.queueA, this.queueB);
       this.$el.append(song.$el);
     }, this);
   }
@@ -84,10 +88,12 @@ var QueueCollectionView = Backbone.View.extend({
   tagName: 'table',
   initialize: function(container, collection) {
     this.collection = collection;
+    this.collection.on('add', this.render.bind(this));
     container.append(this.$el);
     this.render();
   },
   render: function() {
+    this.$el.html('');
     this.collection.each(function(item) {
       var song = new QueueSongView(item);
       this.$el.append(song.$el);
@@ -149,7 +155,7 @@ var queueB = new QueueCollection([]);
 
 // VIEW INSTANCES
 
-var libraryView = new LibraryCollectionView($('#libraryView'), library);
+var libraryView = new LibraryCollectionView($('#libraryView'), library, queueA, queueB);
 
 var queueViewA = new QueueCollectionView($('#queueViewA'), queueA);
 
