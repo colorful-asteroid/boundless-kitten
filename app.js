@@ -18,9 +18,13 @@ var port = process.env.PORT || '3000';
 //   ROUTES                                               //
 //========================================================//
 app.get('/', function(req, res) {
-  res.send('Hello World!');
+  res.send('INDEX Hello World!');
 });
 
+
+app.get('/gridtest', function(req, res) {
+  res.send('GRID TEST Hello World!');
+});
 //========================================================//
 //   Populates the library by querying the db             //
 //========================================================//
