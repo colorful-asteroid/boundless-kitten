@@ -1,26 +1,68 @@
-//left turntable
+////////////////////////////////////////////////////////////////////////////////
+//                                                                    MODELS  //
+////////////////////////////////////////////////////////////////////////////////
 
-// MODELS
+var AppModel = Backbone.Model.extend({
+  initialize: function() {
+    var queueA = new QueueCollection([]);
+    var queueB = new QueueCollection([]);
+
+    queueA.on('playsong', function(song) {
+      this.set('currentSongA', song);
+    }, this);
+    queueB.on('playsong', function(song) {
+      this.set('currentSongB', song);
+    }, this);
+
+    this.set('queueA', queueA);
+    this.set('queueB', queueB);
+
+    this.set('currentSongA', new SongModel());
+    this.set('currentSongB', new SongModel());
+  }
+});
+
 var SongModel = Backbone.Model.extend({
 
 });
 
-// COLLECTIONS
+////////////////////////////////////////////////////////////////////////////////
+//                                                               COLLECTIONS  //
+////////////////////////////////////////////////////////////////////////////////
+
 var LibraryCollection = Backbone.Collection.extend({
   model: SongModel
 });
 
 var QueueCollection = Backbone.Collection.extend({
-  model: SongModel
+  model: SongModel,
+  enqueue: function(song) {
+    this.add(song);
+    if (this.length === 1) {
+      //play it somehow
+      this.trigger('playsong', this.at(0));
+    }
+  }
 });
 
-// collection : group of models
-// var Songs = Backbone.Collection.extend({
-//   model: Song
-// });
+////////////////////////////////////////////////////////////////////////////////
+//                                                                     VIEWS  //
+////////////////////////////////////////////////////////////////////////////////
 
-// VIEWS
-// view: render the models
+var AppView = Backbone.View.extend({
+  initialize: function(params) {
+    this.playerViewA = new PlayerView($('.playerLeft'));
+    this.playerViewB = new PlayerView($('.playerRight'));
+
+    this.model.on('change:currentSongA', function(model){
+      this.playerViewA.setSong(model.get('currentSongA'));
+    }, this);
+
+    this.model.on('change:currentSongB', function(model){
+      this.playerViewB.setSong(model.get('currentSongB'));
+    }, this);
+  }
+});
 
 var LibrarySongView = Backbone.View.extend({
   tagName: 'tr',
@@ -34,14 +76,14 @@ var LibrarySongView = Backbone.View.extend({
     var that = this;
     var queueBtnA = $('<input type="button" value="QueueA"></input>');
     queueBtnA.click(function() {
-      that.queueA.add(that.model.clone());
+      that.queueA.enqueue(that.model.clone());
     });
     var tdA = $('<td>');
     tdA.append(queueBtnA);
 
     var queueBtnB = $('<input type="button" value="QueueB"></input>');
     queueBtnB.click(function() {
-      that.queueB.add(that.model.clone());
+      that.queueB.enqueue(that.model.clone());
     });
     var tdB = $('<td>');
     tdB.append(queueBtnB);
@@ -108,59 +150,63 @@ var PlayerView = Backbone.View.extend({
     container.append(this.$el);
     this.render();
   },
+  setSong: function(song){
+    this.model = song;
+    if(!this.model){
+      this.el.pause();
+    }
+
+    this.render();
+  },
   render: function() {
-    return this.$el.attr('src', 'audio/jayz.mp3');
+    return this.$el.attr('src', this.model ? this.model.get('url') : '');
   }
 
 });
 
-// COLLECTION INSTANCES
+////////////////////////////////////////////////////////////////////////////////
+//                                                           MODEL INSTANCES  //
+////////////////////////////////////////////////////////////////////////////////
+
+var appModel = new AppModel();
+
+////////////////////////////////////////////////////////////////////////////////
+//                                                      COLLECTION INSTANCES  //
+////////////////////////////////////////////////////////////////////////////////
 
 var library = new LibraryCollection([
   new SongModel({
-    title: "Song One"
+    title: "Jay-Z",
+    url: 'audio/jayz.mp3'
   }),
   new SongModel({
-    title: "Song Two"
+    title: "Biggie",
+    url: 'audio/big.mp3'
   }),
   new SongModel({
-    title: "Song Three"
+    title: "Nas",
+    url: 'audio/nas.mp3'
   }),
   new SongModel({
-    title: "Song Four"
+    title: "Scarface",
+    url: 'audio/scarface.mp3'
   }),
   new SongModel({
-    title: "Song Five"
-  }),
-  new SongModel({
-    title: "Song Six"
-  }),
-  new SongModel({
-    title: "Song Seven"
-  }),
-  new SongModel({
-    title: "Song Eight"
-  }),
-  new SongModel({
-    title: "Song Nine"
-  }),
-  new SongModel({
-    title: "Song Ten"
+    title: "Q-Tip",
+    url: 'audio/qtip.mp3'
   })
 ]);
 
-var queueA = new QueueCollection([]);
+////////////////////////////////////////////////////////////////////////////////
+//                                                            VIEW INSTANCES  //
+////////////////////////////////////////////////////////////////////////////////
 
-var queueB = new QueueCollection([]);
+var libraryView = new LibraryCollectionView($('#libraryView'), library, appModel.get('queueA'), appModel.get('queueB'));
 
-// VIEW INSTANCES
+var queueViewA = new QueueCollectionView($('#queueViewA'), appModel.get('queueA'));
 
-var libraryView = new LibraryCollectionView($('#libraryView'), library, queueA, queueB);
+var queueViewB = new QueueCollectionView($('#queueViewB'), appModel.get('queueB'));
 
-var queueViewA = new QueueCollectionView($('#queueViewA'), queueA);
-
-var queueViewB = new QueueCollectionView($('#queueViewB'), queueB);
-
-var playerViewA = new PlayerView($('.playerLeft'));
-
-var playerViewB = new PlayerView($('.playerRight'));
+var appView = new AppView({
+  model: appModel
+});
