@@ -13,17 +13,17 @@ var AppModel = Backbone.Model.extend({
     queueB.on('playsong', function(song) {
       this.set('currentSongB', song);
     }, this);
-    
+
     this.set('queueA', queueA);
     this.set('queueB', queueB);
 
     this.set('currentSongA', new SongModel());
     this.set('currentSongB', new SongModel());
   },
-  dequeueA: function(){
+  dequeueA: function() {
     this.get('queueA').dequeue();
   },
-  dequeueB: function(){
+  dequeueB: function() {
     this.get('queueB').dequeue();
   },
 });
@@ -49,12 +49,12 @@ var QueueCollection = Backbone.Collection.extend({
       this.trigger('playsong', this.at(0));
     }
   },
-  dequeue: function(){
+  dequeue: function() {
     this.shift();
     if (this.length >= 1) {
       //play it somehow
       this.trigger('playsong', this.at(0));
-    }else{
+    } else {
       this.trigger('playsong');
     }
   }
@@ -68,21 +68,29 @@ var AppView = Backbone.View.extend({
   initialize: function(params) {
     this.playerViewA = new PlayerView($('.playerLeft'));
     this.playerViewB = new PlayerView($('.playerRight'));
+    this.sliderView = new SliderView($('#sliderContainer'));
 
-    this.model.on('change:currentSongA', function(model){
+    this.model.on('change:currentSongA', function(model) {
       this.playerViewA.setSong(model.get('currentSongA'));
     }, this);
 
-    this.model.on('change:currentSongB', function(model){
+    this.model.on('change:currentSongB', function(model) {
       this.playerViewB.setSong(model.get('currentSongB'));
     }, this);
 
-    this.playerViewA.on('ended', function(){
+    this.playerViewA.on('ended', function() {
       this.model.dequeueA();
-    },this);
-    this.playerViewB.on('ended', function(){
+    }, this);
+    this.playerViewB.on('ended', function() {
       this.model.dequeueB();
-    },this);
+    }, this);
+
+    this.sliderView.on('x-fade', function(value) {
+      value = parseFloat(value);
+      this.playerViewA.setVolume(value > 0 ? 1 - value : 1);
+      this.playerViewB.setVolume(value < 0 ? 1 + value : 1);
+    }, this);
+
   }
 });
 
@@ -169,19 +177,22 @@ var PlayerView = Backbone.View.extend({
 
   el: '<audio controls preload auto />',
   initialize: function(container) {
-    this.$el.on('ended', function(){
+    this.$el.on('ended', function() {
       this.trigger('ended', this.model);
     }.bind(this));
     container.append(this.$el);
     this.render();
   },
-  setSong: function(song){
+  setSong: function(song) {
     this.model = song;
-    if(!this.model){
+    if (!this.model) {
       this.el.pause();
     }
 
     this.render();
+  },
+  setVolume: function(value) {
+    this.$el.prop("volume", value);
   },
   render: function() {
     return this.$el.attr('src', this.model ? this.model.get('url') : '');
@@ -190,9 +201,12 @@ var PlayerView = Backbone.View.extend({
 });
 
 var SliderView = Backbone.View.extend({
-  el:'<input id="slider" type="range" min="0" max="1" step="0.01"></input>',
-  initialize: function(container){
+  el: '<input id="slider" type="range" min="-1" max="1" step="0.1"></input>',
+  initialize: function(container) {
     container.append(this.$el);
+    this.$el.on('input', function() {
+      this.trigger('x-fade', this.$el.val());
+    }.bind(this));
   }
 });
 
@@ -238,8 +252,6 @@ var libraryView = new LibraryCollectionView($('#libraryView'), library, appModel
 var queueViewA = new QueueCollectionView($('#queueViewA'), appModel.get('queueA'));
 
 var queueViewB = new QueueCollectionView($('#queueViewB'), appModel.get('queueB'));
-
-var sliderView = new SliderView($('#sliderContainer'));
 
 var appView = new AppView({
   model: appModel
