@@ -13,13 +13,19 @@ var AppModel = Backbone.Model.extend({
     queueB.on('playsong', function(song) {
       this.set('currentSongB', song);
     }, this);
-
+    
     this.set('queueA', queueA);
     this.set('queueB', queueB);
 
     this.set('currentSongA', new SongModel());
     this.set('currentSongB', new SongModel());
-  }
+  },
+  dequeueA: function(){
+    this.get('queueA').dequeue();
+  },
+  dequeueB: function(){
+    this.get('queueB').dequeue();
+  },
 });
 
 var SongModel = Backbone.Model.extend({
@@ -42,6 +48,15 @@ var QueueCollection = Backbone.Collection.extend({
       //play it somehow
       this.trigger('playsong', this.at(0));
     }
+  },
+  dequeue: function(){
+    this.shift();
+    if (this.length >= 1) {
+      //play it somehow
+      this.trigger('playsong', this.at(0));
+    }else{
+      this.trigger('playsong');
+    }
   }
 });
 
@@ -61,6 +76,13 @@ var AppView = Backbone.View.extend({
     this.model.on('change:currentSongB', function(model){
       this.playerViewB.setSong(model.get('currentSongB'));
     }, this);
+
+    this.playerViewA.on('ended', function(){
+      this.model.dequeueA();
+    },this);
+    this.playerViewB.on('ended', function(){
+      this.model.dequeueB();
+    },this);
   }
 });
 
@@ -130,7 +152,7 @@ var QueueCollectionView = Backbone.View.extend({
   tagName: 'table',
   initialize: function(container, collection) {
     this.collection = collection;
-    this.collection.on('add', this.render.bind(this));
+    this.collection.on('add remove', this.render.bind(this));
     container.append(this.$el);
     this.render();
   },
@@ -147,6 +169,9 @@ var PlayerView = Backbone.View.extend({
 
   el: '<audio controls preload auto />',
   initialize: function(container) {
+    this.$el.on('ended', function(){
+      this.trigger('ended', this.model);
+    }.bind(this));
     container.append(this.$el);
     this.render();
   },
