@@ -1,26 +1,26 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <meta charset="UTF-8">
-  
+
   <title>trntbl3000</title>
   <link rel="stylesheet" type="text/css" href="style.css">
 </head>
+
 <body>
 
-  <center><h1 id="logo">trntbl3000</h1></center>
+  <center>
+    <h1 id="logo">trntbl3000</h1>
+  </center>
 
   <!-- song queue for the left turntable -->
 
-  <table align="left" class ="turntable" id="songsLeft">
-    <th>T1 Queue</th>
-  </table>
+  <div align="left" id="queueViewA"></div>
 
   <!-- song queue for the right turntable -->
 
-  <table align="right" class ="turntable" id="songsRight">
-    <th>T2 Queue</th>
-  </table>
+  <div align="right" id="queueViewB"></div>
 
   <!-- both audio players -->
 
@@ -37,14 +37,17 @@
   <!-- master song library -->
 
   <table align="center">
-    <th><h2>Song Library</h2></th>
+    <th>
+      <h2>Song Library</h2>
+    </th>
   </table>
 
   <script src="lib/jquery-min.js" type="text/javascript"></script>
   <script src="lib/underscore-min.js" type="text/javascript"></script>
   <script src="lib/backbone-min.js" type="text/javascript"></script>
-  <script src ="app.js" type="text/javascript"></script>
-  <script src ="Table1.js" type="text/javascript"></script>
+  <script src="app.js" type="text/javascript"></script>
+  <script src="Table1.js" type="text/javascript"></script>
 
 </body>
+
 </html>
