@@ -4,6 +4,8 @@ var assert = require('assert');
 var mongo = require('mongodb');
 var Grid = require('gridfs-stream');
 var fs = require('fs');
+var Mtemp = null;
+var Itemp = null;
 
 // Connection URL 
 var url = 'mongodb://ds031213.mongolab.com:31213/heroku_sxb8blzn';
@@ -24,19 +26,30 @@ MongoClient.connect(url, function(err, db) {
       });
     
     fs.createReadStream('README.md').pipe(writestream);
-  })
+    // fs.close('NEWFILE.txt', callback);
+    // save this is async
+    writestream.on('close', function(file) {
 
+      console.log( 'file :', file.md5 );
+
+    });
+  // });
+
+
+    //write content to file system
+    var fs_write_stream = fs.createWriteStream('write.txt');
+     
+    //read from mongodb
+    var readstream = gfs.createReadStream({
+       filename: 'NEWFILE.txt'
+    });
+    readstream.pipe(fs_write_stream);
+    
+    fs_write_stream.on('close', function () {
+         console.log('file has been written fully!');
+    });
+
+  });
 });
-// // streaming from gridfs 
-// var readstream = gfs.createReadStream({
-//   filename: 'my_file.txt'
-// });
- 
-// //error handling, e.g. file does not exist 
-// readstream.on('error', function (err) {
-//   console.log('An error occurred!', err);
-//   throw err;
-// });
- 
-// readstream.pipe(response);
 
+//reference: http://excellencenodejsblog.com/gridfs-using-mongoose-nodejs/
