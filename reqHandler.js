@@ -4,14 +4,13 @@ var assert = require('assert');
 var mongo = require('mongodb');
 var Grid = require('gridfs-stream');
 var fs = require('fs');
-var Mtemp = null;
-var Itemp = null;
+
 
 // Connection URL 
 var url = 'mongodb://ds031213.mongolab.com:31213/heroku_sxb8blzn';
 
 // Use connect method to connect to the Server 
-var foo = MongoClient.connect(url, function(err, db) {
+MongoClient.connect(url, function(err, db) {
   assert.equal(null, err);
   console.log("Connected correctly to server FROM REQ HANDLER");
  
@@ -51,5 +50,4 @@ var foo = MongoClient.connect(url, function(err, db) {
 
   });
 });
-exports.foo = foo;
 //reference: http://excellencenodejsblog.com/gridfs-using-mongoose-nodejs/
