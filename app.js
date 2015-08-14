@@ -27,7 +27,7 @@ app.get('/', function(req, res) {
 
 app.get('/gridtest', function(req, res) {
 
-
+console.log('helloo????????')
   var MongoClient = require('mongodb').MongoClient;
   var assert = require('assert');
   var mongo = require('mongodb');
@@ -41,7 +41,7 @@ app.get('/gridtest', function(req, res) {
   // Use connect method to connect to the Server 
   var thingy = MongoClient.connect(url, function(err, db) {
     assert.equal(null, err);
-    console.log("Connected correctly to server FROM REQ HANDLER");
+    console.log("Connected correctly to server FROM REQ HANDLER HELLO");
    
   // make sure the db instance is open before passing into `Grid` 
     db.authenticate('testDummy', 'testDummy', function(err, res) {
@@ -82,6 +82,13 @@ app.get('/gridtest', function(req, res) {
 
 
 
+  var test = function() {return 19430943094}
+
+
+
+
+
+  console.log('THINGYYYYYYYYYY',test)
 
 
 
@@ -89,14 +96,7 @@ app.get('/gridtest', function(req, res) {
 
 
 
-
-
-
-
-
-
-
-  res.send(JSON.stringify(thingy));
+  res.send(JSON.stringify(test));
 });
 //========================================================//
 //   Populates the library by querying the db             //
