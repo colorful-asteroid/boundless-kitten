@@ -189,6 +189,13 @@ var PlayerView = Backbone.View.extend({
 
 });
 
+var SliderView = Backbone.View.extend({
+  el:'<input id="slider" type="range" min="0" max="1" step="0.01"></input>',
+  initialize: function(container){
+    container.append(this.$el);
+  }
+});
+
 ////////////////////////////////////////////////////////////////////////////////
 //                                                           MODEL INSTANCES  //
 ////////////////////////////////////////////////////////////////////////////////
@@ -231,6 +238,8 @@ var libraryView = new LibraryCollectionView($('#libraryView'), library, appModel
 var queueViewA = new QueueCollectionView($('#queueViewA'), appModel.get('queueA'));
 
 var queueViewB = new QueueCollectionView($('#queueViewB'), appModel.get('queueB'));
+
+var sliderView = new SliderView($('#sliderContainer'));
 
 var appView = new AppView({
   model: appModel
