@@ -29,7 +29,28 @@ var LibrarySongView = Backbone.View.extend({
     this.render();
   },
   render: function() {
-    return this.$el.append('<td>' + this.model.get('title') + '</td>');
+    
+    var queueBtnA = $('<input type="button" value="QueueA"></input>');
+    queueBtnA.click(function() {
+      console.log('someshit');
+    });
+    var tdA = $('<td>');
+    tdA.append(queueBtnA);
+
+    var queueBtnB = $('<input type="button" value="QueueB"></input>');
+    queueBtnB.click(function() {
+      console.log('someshit other shit');
+    });
+    var tdB = $('<td>');
+    tdB.append(queueBtnB);
+
+    this.$el
+      .append(tdA)
+      .append('<td>' + this.model.get('title') + '</td>')
+      .append(tdB);
+
+    return this;
+
   }
 });
 
