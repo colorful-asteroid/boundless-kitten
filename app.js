@@ -96,7 +96,7 @@ app.get('/gridtest', function(req, res) {
 
 
 
-  res.send(thingy)
+  res.send(JSON.stringify(thingy));
 });
 //========================================================//
 //   Populates the library by querying the db             //
