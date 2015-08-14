@@ -5,6 +5,7 @@ var dbconnection = require('./dbconnection.js');
 var Library = require('./dbconnection.js').Library;
 var app = express();
 var url = require('./reqHandler.js').url;
+var foo = require('./reqHandler.js').foo;
 // var db = require('./reqHandler.js').db;
 // var gfs = require('./reqHandler.js').gfs;
 // var writeStream = require('./reqHandler.js').writeStream;
@@ -23,7 +24,7 @@ app.get('/', function(req, res) {
 
 
 app.get('/gridtest', function(req, res) {
-  res.send('GRID TEST Hello World!');
+  res.send('GRID TEST Hello World!',foo());
 });
 //========================================================//
 //   Populates the library by querying the db             //

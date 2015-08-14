@@ -11,7 +11,7 @@ var Itemp = null;
 var url = 'mongodb://ds031213.mongolab.com:31213/heroku_sxb8blzn';
 
 // Use connect method to connect to the Server 
-MongoClient.connect(url, function(err, db) {
+var foo = MongoClient.connect(url, function(err, db) {
   assert.equal(null, err);
   console.log("Connected correctly to server FROM REQ HANDLER");
  
@@ -25,7 +25,7 @@ MongoClient.connect(url, function(err, db) {
           filename: 'NEWFILE.txt'
       });
     
-    fs.createReadStream('README.md').pipe(writestream);
+    fs.createReadStream('dummyfile1.md').pipe(writestream);
     // fs.close('NEWFILE.txt', callback);
     // save this is async
     writestream.on('close', function(file) {
@@ -37,7 +37,7 @@ MongoClient.connect(url, function(err, db) {
 
 
     //write content to file system
-    var fs_write_stream = fs.createWriteStream('write.txt');
+    var fs_write_stream = fs.createWriteStream('copiedDummy.txt');
      
     //read from mongodb
     var readstream = gfs.createReadStream({
@@ -51,5 +51,5 @@ MongoClient.connect(url, function(err, db) {
 
   });
 });
-
+exports.foo = foo;
 //reference: http://excellencenodejsblog.com/gridfs-using-mongoose-nodejs/
