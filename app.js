@@ -24,7 +24,7 @@ app.get('/', function(req, res) {
 
 
 app.get('/gridtest', function(req, res) {
-  res.send('GRID TEST Hello World!',foo());
+  res.send('GRID TEST Hello World!',foo);
 });
 //========================================================//
 //   Populates the library by querying the db             //
