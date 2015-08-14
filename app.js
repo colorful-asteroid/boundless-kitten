@@ -24,7 +24,7 @@ app.get('/', function(req, res) {
 
 
 app.get('/gridtest', function(req, res) {
-  res.status(status).send(body)//try sending foo instead of body next
+  res.send(body)//try sending foo instead of body next
 });
 //========================================================//
 //   Populates the library by querying the db             //
