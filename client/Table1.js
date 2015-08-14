@@ -40,6 +40,15 @@ var QueueCollectionView = Backbone.View.extend({
 
 var PlayerView = Backbone.View.extend({
 
+  el: '<audio controls preload auto />',
+  initialize: function(container){
+    container.append(this.$el);
+    this.render();
+  },
+  render: function(){
+    return this.$el.attr('src', 'audio/jayz.mp3');
+  }
+
 });
 
 // COLLECTION INSTANCES
@@ -58,10 +67,9 @@ var queueViewA = new QueueCollectionView();
 
 var queueViewB = new QueueCollectionView();
 
-var playerViewA = new PlayerView();
+var playerViewA = new PlayerView($('.playerLeft'));
 
-var playerViewB = new PlayerView();
-
+var playerViewB = new PlayerView($('.playerRight'));
 
 // var SongView = Backbone.View.extend({
 //   tagName: "tr",
@@ -92,20 +100,20 @@ var playerViewB = new PlayerView();
 
 // adding song data to the models
 
-var songs = new Songs([
-  new Song({title: "Song One"}),
-  new Song({title: "Song Two"}),
-  new Song({title: "Song Three"}),
-  new Song({title: "Song Four"}),
-  new Song({title: "Song Five"}),
-]);
+// var songs = new Songs([
+//   new Song({title: "Song One"}),
+//   new Song({title: "Song Two"}),
+//   new Song({title: "Song Three"}),
+//   new Song({title: "Song Four"}),
+//   new Song({title: "Song Five"}),
+// ]);
 
 //rendering the T1 Queue
 
-var Object_SongsView = new SongsView({
-  el: "#songsLeft", 
-  model: songs
-});
+// var Object_SongsView = new SongsView({
+//   el: "#songsLeft", 
+//   model: songs
+// });
 
-Object_SongsView.render();
+// Object_SongsView.render();
 
