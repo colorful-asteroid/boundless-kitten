@@ -5,7 +5,8 @@ var Schema = mongoose.Schema;
 var songSchema = new Schema({
   title: String,
   genre: String,
-  duration: Number
+  duration: Number,
+  trackId: String,
 });
 
 // not exactly sure what this does, but the docs say to do it

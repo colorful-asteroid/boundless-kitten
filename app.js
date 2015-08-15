@@ -26,77 +26,16 @@ app.get('/', function(req, res) {
 
 
 app.get('/gridtest', function(req, res) {
+  var insert = require('./reqHandler.js').insert;
+  insert();
+  res.send('new copiedDummy.txt file has been created');
+});
 
-console.log('helloo????????')
-  var MongoClient = require('mongodb').MongoClient;
-  var assert = require('assert');
-  var mongo = require('mongodb');
-  var Grid = require('gridfs-stream');
-  var fs = require('fs');
-
-
-  // Connection URL 
-  var url = 'mongodb://ds031213.mongolab.com:31213/heroku_sxb8blzn';
-
-  // Use connect method to connect to the Server 
-  var thingy = MongoClient.connect(url, function(err, db) {
-    assert.equal(null, err);
-    console.log("Connected correctly to server FROM REQ HANDLER HELLO");
-   
-  // make sure the db instance is open before passing into `Grid` 
-    db.authenticate('testDummy', 'testDummy', function(err, res) {
-    // callback
-      var gfs = Grid(db, mongo);
-
-      // streaming to gridfs 
-      var writestream = gfs.createWriteStream({
-            filename: 'NEWFILE.txt'
-        });
-      
-      fs.createReadStream('dummyfile1.md').pipe(writestream);
-      // fs.close('NEWFILE.txt', callback);
-      // save this is async
-      writestream.on('close', function(file) {
-
-        console.log( 'file :', file.md5 );
-
-      });
-    // });
-
-
-      //write content to file system
-      var fs_write_stream = fs.createWriteStream('copiedDummy.txt');
-       
-      //read from mongodb
-      var readstream = gfs.createReadStream({
-         filename: 'NEWFILE.txt'
-      });
-      readstream.pipe(fs_write_stream);
-      
-      fs_write_stream.on('close', function () {
-           console.log('file has been written fully!');
-      });
-
-    });
-  });
-
-
-
-  var test = function() {return 19430943094}
-
-
-
-
-
-  console.log('THINGYYYYYYYYYY',test)
-
-
-
-
-
-
-
-  res.send(JSON.stringify(test));
+app.get('/test', function(req, res) {
+  var retrieve = require('./reqHandler.js').retrieve;
+  // console.log("RETRIEVE IS -----------",retrieve)
+  retrieve();
+  res.send('testing...');
 });
 //========================================================//
 //   Populates the library by querying the db             //
