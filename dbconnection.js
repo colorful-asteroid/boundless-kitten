@@ -8,6 +8,9 @@ var mongoose = require('mongoose');
 //   username:  testDummy                                 //
 //   password:  testDummy                                 //
 //   database name:  heroku_sxb8blzn                      //
+//   heroku acct info:                                    //
+//    email: cdersky@gmail.com                            //
+//    password: Greenfield1234                            //
 //========================================================//
 mongoose.connect('mongodb://testDummy:testDummy@ds031213.mongolab.com:31213/heroku_sxb8blzn');
 
