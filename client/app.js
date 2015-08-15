@@ -83,10 +83,13 @@ var QueueCollection = Backbone.Collection.extend({
 //define view class for the entire app
 var AppView = Backbone.View.extend({
   initialize: function(params) {
+    //instantiating our turntables and crossfader
     this.playerViewA = new PlayerView($('.playerLeft'));
     this.playerViewB = new PlayerView($('.playerRight'));
     this.sliderView = new SliderView($('#sliderContainer'));
 
+    //listening for a change to our current song in the corresponding turntable, callback will be invoked when the change event is fired
+    //'setSong' is defined in 'PlayerView'
     this.model.on('change:currentSongA', function(model) {
       this.playerViewA.setSong(model.get('currentSongA'));
     }, this);
@@ -95,6 +98,7 @@ var AppView = Backbone.View.extend({
       this.playerViewB.setSong(model.get('currentSongB'));
     }, this);
 
+    //when song ends, the callback function will be invoked and the ended song will be removed. 'dequeueA/B' is defined in 'AppModel'
     this.playerViewA.on('ended', function() {
       this.model.dequeueA();
     }, this);
@@ -102,6 +106,8 @@ var AppView = Backbone.View.extend({
       this.model.dequeueB();
     }, this);
 
+    //'sliderView' is instantiated in 'AppModel', the callback responds to the 'x-fade' event when the user moves the crossfader
+    //the volume control on both audio players are linked together and will respond to crossfader movement
     this.sliderView.on('x-fade', function(value) {
       value = parseFloat(value);
       this.playerViewA.setVolume(value > 0 ? 1 - value : 1);
@@ -111,20 +117,27 @@ var AppView = Backbone.View.extend({
   }
 });
 
+//define the view class for a song in the library
 var LibrarySongView = Backbone.View.extend({
+  //create a 'tr' tag name for each song
   tagName: 'tr',
+  //initialize will take in a model (song) and both queues, and define them
   initialize: function(model, queueA, queueB) {
     this.model = model;
     this.queueA = queueA;
     this.queueB = queueB;
     this.render();
   },
+  //render each song in our library
   render: function() {
+    //keep 'this' in context 
     var that = this;
+    //create a button that, when clicked, will send a song to queueA
     var queueBtnA = $('<input type="button" value="QueueA"></input>');
     queueBtnA.click(function() {
       that.queueA.enqueue(that.model.clone());
     });
+    //create a cell in our row that we can append our button to
     var tdA = $('<td>');
     tdA.append(queueBtnA);
 
@@ -135,6 +148,7 @@ var LibrarySongView = Backbone.View.extend({
     var tdB = $('<td>');
     tdB.append(queueBtnB);
 
+    //render this view which will consist of two queue buttons with song title in the same row
     this.$el
       .append(tdA)
       .append('<td>' + this.model.get('title') + '</td>')
@@ -145,6 +159,7 @@ var LibrarySongView = Backbone.View.extend({
   }
 });
 
+//define the view class which will be comprised of the entire song library
 var LibraryCollectionView = Backbone.View.extend({
   tagName: 'table',
   initialize: function(container, collection, queueA, queueB) {
