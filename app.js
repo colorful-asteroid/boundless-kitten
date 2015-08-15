@@ -42,10 +42,10 @@ app.get('/', function(req, res) {
 //   res.send('new copiedDummy.txt file has been created');
 // });
 
-app.get('/test', function(req, res) {
+app.get('/track', function(req, res) {
   // console.log("RETRIEVE IS -----------",retrieve)
-  console.log(res);
-  retrieve('55ce940a823fa40795ccbedc', res);
+  console.log('req.query.id :', req.query.id);
+  retrieve(req.query.id, res);
   //res.send('testing...');
 });
 //========================================================//
