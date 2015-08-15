@@ -27,12 +27,16 @@ app.use(function(req, res, next) {
   next();
 });
 
+//========================================================//
+//   serve the files from this directory statically       //
+//========================================================//
+app.use(express.static('client'));
 
 //========================================================//
 //   ROUTES                                               //
 //========================================================//
 app.get('/', function(req, res) {
-  res.send('INDEX Hello World!');
+  res.location('/client/index.html');
 });
 
 
