@@ -38,6 +38,7 @@ var SongModel = Backbone.Model.extend({
 
 var LibraryCollection = Backbone.Collection.extend({
   model: SongModel
+  //url: (where our songs collection exists on the server)
 });
 
 var QueueCollection = Backbone.Collection.extend({
@@ -242,6 +243,10 @@ var library = new LibraryCollection([
     url: 'audio/qtip.mp3'
   })
 ]);
+
+//library.fetch()
+  // makes an http GET request and populates the collection
+  // fetch is an asyc call and accepts success and error callbacks
 
 ////////////////////////////////////////////////////////////////////////////////
 //                                                            VIEW INSTANCES  //
