@@ -44,14 +44,10 @@ var SongModel = Backbone.Model.extend({
 ////////////////////////////////////////////////////////////////////////////////
 
 var LibraryCollection = Backbone.Collection.extend({
+  //model contained within the library
   model: SongModel,
-  //url: (where our songs collection exists on the server)
-  url: 'https://trntbl3000.herokuapp.com/songs',
-  initialize: function(){
-    this.on('add', function(){
-      console.log('dsfdsfds');
-    })
-  }
+  //where our songs collection exists on the server
+  url: 'https://trntbl3000.herokuapp.com/songs'
 });
 
 var QueueCollection = Backbone.Collection.extend({
