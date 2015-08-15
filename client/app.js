@@ -26,7 +26,7 @@ var AppModel = Backbone.Model.extend({
     this.set('currentSongB', new SongModel());
   },
 
-  //setting a current song attribute that
+  //dequeue methods for each queue
   dequeueA: function() {
     this.get('queueA').dequeue();
   },
@@ -35,6 +35,7 @@ var AppModel = Backbone.Model.extend({
   },
 });
 
+//defining a model for a song
 var SongModel = Backbone.Model.extend({
 
 });
@@ -50,19 +51,24 @@ var LibraryCollection = Backbone.Collection.extend({
   url: 'https://trntbl3000.herokuapp.com/songs'
 });
 
+
 var QueueCollection = Backbone.Collection.extend({
+  //model contained within the queue
   model: SongModel,
+  //define enqueue method, which will be fired from the button in 'LibrarySongView'
   enqueue: function(song) {
+    //add song to the queue
     this.add(song);
+    //if this is the only song in the queue, send the audio to its corresponding player
     if (this.length === 1) {
-      //play it somehow
       this.trigger('playsong', this.at(0));
     }
   },
+  //define dequeue method, which will be fired from 'AppModel'
   dequeue: function() {
+    //remove the song
     this.shift();
     if (this.length >= 1) {
-      //play it somehow
       this.trigger('playsong', this.at(0));
     } else {
       this.trigger('playsong');
@@ -74,6 +80,7 @@ var QueueCollection = Backbone.Collection.extend({
 //                                                                     VIEWS  //
 ////////////////////////////////////////////////////////////////////////////////
 
+//define view class for the entire app
 var AppView = Backbone.View.extend({
   initialize: function(params) {
     this.playerViewA = new PlayerView($('.playerLeft'));
