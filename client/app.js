@@ -2,11 +2,14 @@
 //                                                                    MODELS  //
 ////////////////////////////////////////////////////////////////////////////////
 
+//defining model for the entire app
 var AppModel = Backbone.Model.extend({
   initialize: function() {
+    //instatiating both queue collections. 'queueA' and 'queueB' will both be an array of objects
     var queueA = new QueueCollection([]);
     var queueB = new QueueCollection([]);
 
+    //binding a callback to both queues that will set the current song. it will be invoked when the 'playsong' event is fired from 'QueueCollection'
     queueA.on('playsong', function(song) {
       this.set('currentSongA', song);
     }, this);
@@ -14,12 +17,16 @@ var AppModel = Backbone.Model.extend({
       this.set('currentSongB', song);
     }, this);
 
+    //setting a queue attribute that will have events: add, playsong, and remove
     this.set('queueA', queueA);
     this.set('queueB', queueB);
 
+    //setting a current song attribute
     this.set('currentSongA', new SongModel());
     this.set('currentSongB', new SongModel());
   },
+
+  //setting a current song attribute that
   dequeueA: function() {
     this.get('queueA').dequeue();
   },
@@ -37,8 +44,9 @@ var SongModel = Backbone.Model.extend({
 ////////////////////////////////////////////////////////////////////////////////
 
 var LibraryCollection = Backbone.Collection.extend({
-  model: SongModel
+  model: SongModel,
   //url: (where our songs collection exists on the server)
+  url: 'https://trntbl3000.herokuapp.com/songs'
 });
 
 var QueueCollection = Backbone.Collection.extend({
@@ -221,32 +229,33 @@ var appModel = new AppModel();
 //                                                      COLLECTION INSTANCES  //
 ////////////////////////////////////////////////////////////////////////////////
 
-var library = new LibraryCollection([
-  new SongModel({
-    title: "Jay-Z",
-    url: 'audio/jayz.mp3'
-  }),
-  new SongModel({
-    title: "Biggie",
-    url: 'audio/big.mp3'
-  }),
-  new SongModel({
-    title: "Nas",
-    url: 'audio/nas.mp3'
-  }),
-  new SongModel({
-    title: "Scarface",
-    url: 'audio/scarface.mp3'
-  }),
-  new SongModel({
-    title: "Q-Tip",
-    url: 'audio/qtip.mp3'
-  })
-]);
+var library = new LibraryCollection();
 
-//library.fetch()
+//placeholders: 
+  // new SongModel({
+  //   title: "Jay-Z",
+  //   url: 'audio/jayz.mp3'
+  // }),
+  // new SongModel({
+  //   title: "Biggie",
+  //   url: 'audio/big.mp3'
+  // }),
+  // new SongModel({
+  //   title: "Nas",
+  //   url: 'audio/nas.mp3'
+  // }),
+  // new SongModel({
+  //   title: "Scarface",
+  //   url: 'audio/scarface.mp3'
+  // }),
+  // new SongModel({
+  //   title: "Q-Tip",
+  //   url: 'audio/qtip.mp3'
+  // })
+
+library.fetch();
   // makes an http GET request and populates the collection
-  // fetch is an asyc call and accepts success and error callbacks
+  // fetch is an async call and accepts success and error callbacks
 
 ////////////////////////////////////////////////////////////////////////////////
 //                                                            VIEW INSTANCES  //
