@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+
+  <title>trntbl3000</title>
+  <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+
+<body>
+
+  <!-- header --> 
+
+  <center>
+    <h1 id="logo">trntbl3000</h1>
+  </center>
+
+
+  <!-- song queue for the left turntable -->
+
+  <div align="left" id="queueViewA"></div>
+
+  <!-- song queue for the right turntable -->
+
+  <div align="right" id="queueViewB"></div>
+
+  <!-- both audio players -->
+
+  <div align="center" class="decks">
+    <span class="playerLeft">
+      <!-- <audio src="audio/scarface.mp3" controls preload auto /> -->
+    </span>
+    <span id="sliderContainer"></span>
+    <span class="playerRight">
+      <!-- <audio id="test" src="audio/big.mp3" controls preload auto /> -->
+    </span>
+  </div>
+
+  <!-- master song library -->
+
+  <div align="center" id="libraryView"></div>
+
+  <script src="lib/jquery-min.js" type="text/javascript"></script>
+  <script src="lib/underscore-min.js" type="text/javascript"></script>
+  <script src="lib/backbone-min.js" type="text/javascript"></script>
+  <script src="app.js" type="text/javascript"></script>
+
+</body>
+
+</html>
