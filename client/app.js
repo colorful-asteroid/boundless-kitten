@@ -44,6 +44,7 @@ var SongModel = Backbone.Model.extend({
 //                                                               COLLECTIONS  //
 ////////////////////////////////////////////////////////////////////////////////
 
+//define a collection class for our song library
 var LibraryCollection = Backbone.Collection.extend({
   //model contained within the library
   model: SongModel,
@@ -51,7 +52,7 @@ var LibraryCollection = Backbone.Collection.extend({
   url: 'https://trntbl3000.herokuapp.com/songs'
 });
 
-
+//define a collection class for our queue
 var QueueCollection = Backbone.Collection.extend({
   //model contained within the queue
   model: SongModel,
@@ -161,7 +162,9 @@ var LibrarySongView = Backbone.View.extend({
 
 //define the view class which will be comprised of the entire song library
 var LibraryCollectionView = Backbone.View.extend({
+  //create a table for the songs
   tagName: 'table',
+  //passing in arguments that we want our render method to have access to
   initialize: function(container, collection, queueA, queueB) {
     this.collection = collection;
     this.collection.on('add', this.render.bind(this));
@@ -170,8 +173,10 @@ var LibraryCollectionView = Backbone.View.extend({
     container.append(this.$el);
     this.render();
   },
+  //render the view
   render: function() {
     this.$el.html('');
+    //iterate through the collection and append each song to the table
     this.collection.each(function(item) {
       var song = new LibrarySongView(item, this.queueA, this.queueB);
       this.$el.append(song.$el);
@@ -179,27 +184,37 @@ var LibraryCollectionView = Backbone.View.extend({
   }
 });
 
+//define the view class for a song in the queue
 var QueueSongView = Backbone.View.extend({
+  //create a new row for each song
   tagName: 'tr',
+  //passing in a song that will appended in the render method
   initialize: function(model) {
     this.model = model;
     this.render();
   },
+  //render the view and append the song title to the row
   render: function() {
     return this.$el.append('<td>' + this.model.get('title') + '</td>');
   }
 });
 
+//define the view class for the entire queue of songs
 var QueueCollectionView = Backbone.View.extend({
+  //create a table for the queue
   tagName: 'table',
+  //when a song is added or removed from the collection, render will be invoked to reflect changes
   initialize: function(container, collection) {
     this.collection = collection;
     this.collection.on('add remove', this.render.bind(this));
     container.append(this.$el);
     this.render();
   },
+  //render the view
   render: function() {
+    //reset the container element for each render
     this.$el.html('');
+    //iterate through the collection to append the songs
     this.collection.each(function(item) {
       var song = new QueueSongView(item);
       this.$el.append(song.$el);
@@ -207,16 +222,20 @@ var QueueCollectionView = Backbone.View.extend({
   }
 });
 
+//create a view class for our turntables, which is instantiated in 'AppView'
 var PlayerView = Backbone.View.extend({
-
+  //create a new audio element with controls
   el: '<audio controls preload auto />',
+  //callback is invoked when 'ended' is fired (when song is done playing)
   initialize: function(container) {
     this.$el.on('ended', function() {
       this.trigger('ended', this.model);
     }.bind(this));
+    //clear song out of player
     container.append(this.$el);
     this.render();
   },
+  //'AppView' is listening for 'setSong' to fire
   setSong: function(song) {
     this.model = song;
     if (!this.model) {
@@ -225,18 +244,23 @@ var PlayerView = Backbone.View.extend({
 
     this.render();
   },
+  //'AppView' is listening for 'setVolume' to fire
   setVolume: function(value) {
     this.$el.prop("volume", value);
   },
+  //render the view for the player and get the song from the server
   render: function() {
     return this.$el.attr('src', this.model ? 'https://trntbl3000.herokuapp.com/track?id=' + this.model.get('trackId') : '');
   }
 
 });
 
+//define a view class for our crossfader which is instantiated in 'AppView'
 var SliderView = Backbone.View.extend({
+  //create the slider element and declare a range which will help with 'setVolume' method in 'PlayerView'
   el: '<input id="slider" type="range" min="-1" max="1" step="0.1"></input>',
   initialize: function(container) {
+    //append the slider, and invoke the callback on any crossfader movement by the user
     container.append(this.$el);
     this.$el.on('input', function() {
       this.trigger('x-fade', this.$el.val());
@@ -248,50 +272,32 @@ var SliderView = Backbone.View.extend({
 //                                                           MODEL INSTANCES  //
 ////////////////////////////////////////////////////////////////////////////////
 
+//create a model class for our entire app
 var appModel = new AppModel();
 
 ////////////////////////////////////////////////////////////////////////////////
 //                                                      COLLECTION INSTANCES  //
 ////////////////////////////////////////////////////////////////////////////////
 
+//library is a collection of the songs in our database
 var library = new LibraryCollection();
 
-//placeholders: 
-  // new SongModel({
-  //   title: "Jay-Z",
-  //   url: 'audio/jayz.mp3'
-  // }),
-  // new SongModel({
-  //   title: "Biggie",
-  //   url: 'audio/big.mp3'
-  // }),
-  // new SongModel({
-  //   title: "Nas",
-  //   url: 'audio/nas.mp3'
-  // }),
-  // new SongModel({
-  //   title: "Scarface",
-  //   url: 'audio/scarface.mp3'
-  // }),
-  // new SongModel({
-  //   title: "Q-Tip",
-  //   url: 'audio/qtip.mp3'
-  // })
-
+//calling fetch on library makes a GET request and populates our library
 library.fetch();
-  // makes an http GET request and populates the collection
-  // fetch is an async call and accepts success and error callbacks
 
 ////////////////////////////////////////////////////////////////////////////////
 //                                                            VIEW INSTANCES  //
 ////////////////////////////////////////////////////////////////////////////////
 
+//instantiating a new view for our library
 var libraryView = new LibraryCollectionView($('#libraryView'), library, appModel.get('queueA'), appModel.get('queueB'));
 
+//instantiating our queue collections
 var queueViewA = new QueueCollectionView($('#queueViewA'), appModel.get('queueA'));
 
 var queueViewB = new QueueCollectionView($('#queueViewB'), appModel.get('queueB'));
 
+//instantiate a view for our entire app
 var appView = new AppView({
   model: appModel
 });
