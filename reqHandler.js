@@ -94,6 +94,6 @@ var retrieve = function(id, response){
   })
 }
 
-exports.insert = insert;
+//exports.insert = insert;
 exports.retrieve = retrieve;
 //reference: http://excellencenodejsblog.com/gridfs-using-mongoose-nodejs/
