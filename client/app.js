@@ -46,7 +46,12 @@ var SongModel = Backbone.Model.extend({
 var LibraryCollection = Backbone.Collection.extend({
   model: SongModel,
   //url: (where our songs collection exists on the server)
-  url: 'https://trntbl3000.herokuapp.com/songs'
+  url: 'https://trntbl3000.herokuapp.com/songs',
+  initialize: function(){
+    this.on('add', function(){
+      console.log('dsfdsfds');
+    })
+  }
 });
 
 var QueueCollection = Backbone.Collection.extend({
@@ -141,12 +146,14 @@ var LibraryCollectionView = Backbone.View.extend({
   tagName: 'table',
   initialize: function(container, collection, queueA, queueB) {
     this.collection = collection;
+    this.collection.on('add', this.render.bind(this));
     this.queueA = queueA;
     this.queueB = queueB;
     container.append(this.$el);
     this.render();
   },
   render: function() {
+    this.$el.html('');
     this.collection.each(function(item) {
       var song = new LibrarySongView(item, this.queueA, this.queueB);
       this.$el.append(song.$el);
@@ -204,7 +211,7 @@ var PlayerView = Backbone.View.extend({
     this.$el.prop("volume", value);
   },
   render: function() {
-    return this.$el.attr('src', this.model ? this.model.get('url') : '');
+    return this.$el.attr('src', this.model ? 'https://trntbl3000.herokuapp.com/track?id=' + this.model.get('trackId') : '');
   }
 
 });
