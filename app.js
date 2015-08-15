@@ -5,6 +5,7 @@ var dbconnection = require('./dbconnection.js');
 var Library = require('./dbconnection.js').Library;
 var app = express();
 var url = require('./reqHandler.js').url;
+var retrieve = require('./reqHandler.js').retrieve;
 // var foo = require('./reqHandler.js').gridGet;
 // console.log('what is the URL :',url)
 // console.log('whatis this foo : ',foo)
@@ -25,17 +26,17 @@ app.get('/', function(req, res) {
 });
 
 
-app.get('/gridtest', function(req, res) {
-  var insert = require('./reqHandler.js').insert;
-  insert();
-  res.send('new copiedDummy.txt file has been created');
-});
+// app.get('/gridtest', function(req, res) {
+//   var insert = require('./reqHandler.js').insert;
+//   insert();
+//   res.send('new copiedDummy.txt file has been created');
+// });
 
 app.get('/test', function(req, res) {
-  var retrieve = require('./reqHandler.js').retrieve;
   // console.log("RETRIEVE IS -----------",retrieve)
-  retrieve();
-  res.send('testing...');
+  console.log(res);
+  retrieve('55ce940a823fa40795ccbedc', res);
+  //res.send('testing...');
 });
 //========================================================//
 //   Populates the library by querying the db             //

@@ -66,7 +66,7 @@ var insert = function() {
 }
 
 
-var retrieve = function(id){
+var retrieve = function(id, response){
   var url = 'mongodb://ds031213.mongolab.com:31213/heroku_sxb8blzn';
 
   MongoClient.connect(url, function(err, db) {
@@ -76,23 +76,23 @@ var retrieve = function(id){
     // callback
     var gfs = Grid(db, mongo);
       //write content to file system
-      var fs_write_stream = fs.createWriteStream('random.mp3');
+      //var fs_write_stream = fs.createWriteStream('random.mp3');
        
       //read from mongodb
+      response.set('Content-Type', 'audio/mpeg');
       var readstream = gfs.createReadStream({
          _id: id
       });
-      readstream.pipe(fs_write_stream);
+      console.log(readstream, response)
+      readstream.pipe(response);
       
-      fs_write_stream.on('close', function () {
-           console.log('file has been written fully!');
-      });
+      // fs_write_stream.on('close', function () {
+      //      console.log('file has been written fully!');
+      // });
     
     })
   })
 }
-
-retrieve('55ce940a823fa40795ccbedc');
 
 exports.insert = insert;
 exports.retrieve = retrieve;
