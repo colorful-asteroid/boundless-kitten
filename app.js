@@ -19,6 +19,16 @@ var retrieve = require('./reqHandler.js').retrieve;
 var port = process.env.PORT || '3000';
 
 //========================================================//
+//   connecting the client and server                     //
+//========================================================//
+app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+});
+
+
+//========================================================//
 //   ROUTES                                               //
 //========================================================//
 app.get('/', function(req, res) {
