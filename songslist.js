@@ -1,3 +1,4 @@
+// Initial songs put into the library
 module.exports = [
   { filename: '50 Cent - Window Shopper.mp3',
     title: 'Window Shopper',

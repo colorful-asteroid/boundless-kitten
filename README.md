@@ -19,3 +19,6 @@ Integration Testing: Sinon, Supertest
 
 # Roadmap
 Expect future updates to include multiple DJ-ing sound clips and special FX.
+
+# Notes on the Procfile
+This tells Heroku the location of the server. Other environmental variables can be set here.
