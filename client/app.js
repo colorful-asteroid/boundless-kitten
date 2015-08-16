@@ -158,6 +158,8 @@ var LibrarySongView = Backbone.View.extend({
     this.$el
       .append(tdA)
       .append('<td>' + this.model.get('title') + '</td>')
+      .append('<td>' + this.model.get('artist') + '</td>')
+      .append('<td>' + this.model.get('genre') + '</td>')
       .append(tdB);
 
     return this;
@@ -172,7 +174,7 @@ var LibraryCollectionView = Backbone.View.extend({
 
   // adding .table classname for bootstrap
   className: 'table table-condensed',
-  
+
   //passing in arguments that we want our render method to have access to
   initialize: function(container, collection, queueA, queueB) {
     this.collection = collection;
@@ -186,6 +188,11 @@ var LibraryCollectionView = Backbone.View.extend({
   //render the view
   render: function() {
     this.$el.html('');
+    this.$el.append('<th></th>');
+    this.$el.append('<th>Title</th>');
+    this.$el.append('<th>Artist</th>');
+    this.$el.append('<th>Genre</th>');
+    this.$el.append('<th></th>');
 
     //iterate through the collection and append each song to the table
     this.collection.each(function(item) {
