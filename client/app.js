@@ -1,3 +1,5 @@
+"use strict";
+
 ////////////////////////////////////////////////////////////////////////////////
 //                                                                    MODELS  //
 ////////////////////////////////////////////////////////////////////////////////
@@ -32,13 +34,11 @@ var AppModel = Backbone.Model.extend({
   },
   dequeueB: function() {
     this.get('queueB').dequeue();
-  },
+  }
 });
 
 //defining a model for a song
-var SongModel = Backbone.Model.extend({
-
-});
+var SongModel = Backbone.Model.extend({});
 
 ////////////////////////////////////////////////////////////////////////////////
 //                                                               COLLECTIONS  //
@@ -48,6 +48,7 @@ var SongModel = Backbone.Model.extend({
 var LibraryCollection = Backbone.Collection.extend({
   //model contained within the library
   model: SongModel,
+
   //where our songs collection exists on the server
   url: 'https://trntbl3000.herokuapp.com/songs'
 });
@@ -56,15 +57,18 @@ var LibraryCollection = Backbone.Collection.extend({
 var QueueCollection = Backbone.Collection.extend({
   //model contained within the queue
   model: SongModel,
+
   //define enqueue method, which will be fired from the button in 'LibrarySongView'
   enqueue: function(song) {
     //add song to the queue
     this.add(song);
+
     //if this is the only song in the queue, send the audio to its corresponding player
     if (this.length === 1) {
       this.trigger('playsong', this.at(0));
     }
   },
+
   //define dequeue method, which will be fired from 'AppModel'
   dequeue: function() {
     //remove the song
@@ -122,6 +126,7 @@ var AppView = Backbone.View.extend({
 var LibrarySongView = Backbone.View.extend({
   //create a 'tr' tag name for each song
   tagName: 'tr',
+
   //initialize will take in a model (song) and both queues, and define them
   initialize: function(model, queueA, queueB) {
     this.model = model;
@@ -129,23 +134,23 @@ var LibrarySongView = Backbone.View.extend({
     this.queueB = queueB;
     this.render();
   },
+
   //render each song in our library
   render: function() {
-    //keep 'this' in context 
-    var that = this;
+
     //create a button that, when clicked, will send a song to queueA
     var queueBtnA = $('<input type="button" class="btn btn-default btn-xs" value="QueueA"></input>');
     queueBtnA.click(function() {
-      that.queueA.enqueue(that.model.clone());
-    });
+      this.queueA.enqueue(this.model.clone());
+    }.bind(this));
     //create a cell in our row that we can append our button to
     var tdA = $('<td>');
     tdA.append(queueBtnA);
 
     var queueBtnB = $('<input type="button" class="btn btn-default btn-xs" value="QueueB"></input>');
     queueBtnB.click(function() {
-      that.queueB.enqueue(that.model.clone());
-    });
+      this.queueB.enqueue(this.model.clone());
+    }.bind(this));
     var tdB = $('<td>');
     tdB.append(queueBtnB);
 
@@ -164,7 +169,10 @@ var LibrarySongView = Backbone.View.extend({
 var LibraryCollectionView = Backbone.View.extend({
   //create a table for the songs
   tagName: 'table',
-  className: 'table table-condensed', // adding .table classname for bootstrap
+
+  // adding .table classname for bootstrap
+  className: 'table table-condensed',
+  
   //passing in arguments that we want our render method to have access to
   initialize: function(container, collection, queueA, queueB) {
     this.collection = collection;
@@ -174,9 +182,11 @@ var LibraryCollectionView = Backbone.View.extend({
     container.append(this.$el);
     this.render();
   },
+
   //render the view
   render: function() {
     this.$el.html('');
+
     //iterate through the collection and append each song to the table
     this.collection.each(function(item) {
       var song = new LibrarySongView(item, this.queueA, this.queueB);
@@ -189,11 +199,13 @@ var LibraryCollectionView = Backbone.View.extend({
 var QueueSongView = Backbone.View.extend({
   //create a new row for each song
   tagName: 'tr',
+
   //passing in a song that will appended in the render method
   initialize: function(model) {
     this.model = model;
     this.render();
   },
+
   //render the view and append the song title to the row
   render: function() {
     return this.$el.append('<td>' + this.model.get('title') + '</td>');
@@ -204,7 +216,10 @@ var QueueSongView = Backbone.View.extend({
 var QueueCollectionView = Backbone.View.extend({
   //create a table for the queue
   tagName: 'table',
+
+  // adding .table classname for bootstrap
   className: 'table table-condensed',
+
   //when a song is added or removed from the collection, render will be invoked to reflect changes
   initialize: function(container, collection) {
     this.collection = collection;
@@ -212,10 +227,12 @@ var QueueCollectionView = Backbone.View.extend({
     container.append(this.$el);
     this.render();
   },
+
   //render the view
   render: function() {
     //reset the container element for each render
     this.$el.html('');
+
     //iterate through the collection to append the songs
     this.collection.each(function(item) {
       var song = new QueueSongView(item);
@@ -228,15 +245,18 @@ var QueueCollectionView = Backbone.View.extend({
 var PlayerView = Backbone.View.extend({
   //create a new audio element with controls
   el: '<audio controls preload auto />',
+
   //callback is invoked when 'ended' is fired (when song is done playing)
   initialize: function(container) {
     this.$el.on('ended', function() {
       this.trigger('ended', this.model);
     }.bind(this));
+
     //clear song out of player
     container.append(this.$el);
     this.render();
   },
+
   //'AppView' is listening for 'setSong' to fire
   setSong: function(song) {
     this.model = song;
@@ -246,10 +266,12 @@ var PlayerView = Backbone.View.extend({
 
     this.render();
   },
+
   //'AppView' is listening for 'setVolume' to fire
   setVolume: function(value) {
     this.$el.prop("volume", value);
   },
+
   //render the view for the player and get the song from the server
   render: function() {
     return this.$el.attr('src', this.model ? 'https://trntbl3000.herokuapp.com/track?id=' + this.model.get('trackId') : '');
