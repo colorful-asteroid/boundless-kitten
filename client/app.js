@@ -134,7 +134,7 @@ var LibrarySongView = Backbone.View.extend({
     //keep 'this' in context 
     var that = this;
     //create a button that, when clicked, will send a song to queueA
-    var queueBtnA = $('<input type="button" value="QueueA"></input>');
+    var queueBtnA = $('<input type="button" class="btn btn-default btn-xs" value="QueueA"></input>');
     queueBtnA.click(function() {
       that.queueA.enqueue(that.model.clone());
     });
@@ -142,7 +142,7 @@ var LibrarySongView = Backbone.View.extend({
     var tdA = $('<td>');
     tdA.append(queueBtnA);
 
-    var queueBtnB = $('<input type="button" value="QueueB"></input>');
+    var queueBtnB = $('<input type="button" class="btn btn-default btn-xs" value="QueueB"></input>');
     queueBtnB.click(function() {
       that.queueB.enqueue(that.model.clone());
     });
@@ -164,6 +164,7 @@ var LibrarySongView = Backbone.View.extend({
 var LibraryCollectionView = Backbone.View.extend({
   //create a table for the songs
   tagName: 'table',
+  className: 'table table-condensed', // adding .table classname for bootstrap
   //passing in arguments that we want our render method to have access to
   initialize: function(container, collection, queueA, queueB) {
     this.collection = collection;
@@ -203,6 +204,7 @@ var QueueSongView = Backbone.View.extend({
 var QueueCollectionView = Backbone.View.extend({
   //create a table for the queue
   tagName: 'table',
+  className: 'table table-condensed',
   //when a song is added or removed from the collection, render will be invoked to reflect changes
   initialize: function(container, collection) {
     this.collection = collection;
