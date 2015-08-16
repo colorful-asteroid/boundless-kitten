@@ -7,7 +7,6 @@ var app = express();
 var url = require('./reqHandler.js').url;
 var retrieve = require('./reqHandler.js').retrieve;
 
-
 //========================================================//
 //   Sets port to environment port or local port          //
 //========================================================//
@@ -22,15 +21,15 @@ app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
   next();
 });
-// for more info, see: http://enable-cors.org/server_expressjs.html
 
+// for more info, see: http://enable-cors.org/server_expressjs.html
 
 //========================================================//
 //   statically serves files from the client directory    //
 //========================================================//
 app.use(express.static('client'));
-// for more info, see: http://expressjs.com/starter/static-files.html
 
+// for more info, see: http://expressjs.com/starter/static-files.html
 
 //========================================================//
 //   ROUTES                                               //
@@ -55,8 +54,6 @@ app.get('/', function(req, res) {
 app.get('/track', function(req, res) {
   retrieve(req.query.id, res);
 });
-
-
 
 //=========================================================================//
 //   Automatically populates the library by querying the db                //
