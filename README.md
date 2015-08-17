@@ -5,8 +5,10 @@
 
 ## Dependencies ##
 > Node.js 
+
 > Express.js
-Mongo.db
+
+> Mongo.db
 GridFS
 Backbone.js
 
