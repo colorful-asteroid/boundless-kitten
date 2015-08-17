@@ -18,20 +18,24 @@ var fs = require('fs');
 //     assert.equal(null, err);
 //     console.log("Connected correctly to server FROM REQ HANDLER");
 //     db.authenticate('testDummy', 'testDummy', function(err, res) {
-//       var gfs = Grid(db, mongo);
+
+//       //var gfs = Grid(db, mongo);
 //       var currRecord = songsList.shift();
-//       var uploadMP3 = function(){
-//         var writestream = gfs.createWriteStream({
-//             filename: currRecord.title
-//         });
-//         fs.createReadStream('audio_files/' + currRecord.filename).pipe(writestream);
-//         writestream.on('close', function(file) {
-//           console.log( 'file._id :', file._id );
-//           makeSongRecord(file._id);
-//         });
-//       }
-//       var makeSongRecord = function(id){
+
+//       // var uploadMP3 = function() {
+//       //   var writestream = gfs.createWriteStream({
+//       //     filename: currRecord.title
+//       //   });
+//       //   fs.createReadStream('audio_files/' + currRecord.filename).pipe(writestream);
+//       //   writestream.on('close', function(file) {
+//       //     console.log('file._id :', file._id);
+//       //     makeSongRecord(file._id);
+//       //   });
+//       // };
+
+//       var makeSongRecord = function(id) {
 //         var titanicTS = new Song({
+//           filename: currRecord.filename,
 //           title: currRecord.title,
 //           artist: currRecord.artist,
 //           genre: currRecord.genre,
@@ -40,18 +44,20 @@ var fs = require('fs');
 //         titanicTS.save(function(err) {
 //           if (err) console.log(err);
 //           console.log('Wrote Record:', currRecord.title);
-//           currRecord = songsList.shift()
-//           if(currRecord){
-//             uploadMP3();
-//           }else{
-//             console.log('completed uploads!!!')
+//           currRecord = songsList.shift();
+//           if (currRecord) {
+//             makeSongRecord();
+//           } else {
+//             console.log('completed uploads!!!');
 //           }
 //         });
-//       }
-//       uploadMP3();
+//       };
+
+//       makeSongRecord();
 //     });
 //   });
-// }
+// };
+
 // insert();
 
 //======================================================================//
@@ -59,30 +65,32 @@ var fs = require('fs');
 //  see get rewuest for 'track' route  in app.js (around line 56)       //
 //======================================================================//
 var retrieve = function(id, response) {
-  // sets connection to remote mongolab db
-  var url = 'mongodb://ds031213.mongolab.com:31213/heroku_sxb8blzn';
+  // // sets connection to remote mongolab db
+  // var url = 'mongodb://ds031213.mongolab.com:31213/heroku_sxb8blzn';
 
-  //connection is created
-  MongoClient.connect(url, function(err, db) {
-    // assert is a promise for async functions, see required dependecy above
-    assert.equal(null, err);
+  // //connection is created
+  // MongoClient.connect(url, function(err, db) {
+  //   // assert is a promise for async functions, see required dependecy above
+  //   assert.equal(null, err);
 
-    //mongolab db is authenticated with the username and password arguments provided
-    db.authenticate('testDummy', 'testDummy', function(err, res) {
-      // GridFS is a tool to stream files that are larger than 16MB to/from your Mongo db
-      // for info on Gridfs see: https://www.npmjs.com/package/gridfs-stream
-      // uses an existing mongodb-native db instance
-      var gfs = Grid(db, mongo);
+  //   //mongolab db is authenticated with the username and password arguments provided
+  //   db.authenticate('testDummy', 'testDummy', function(err, res) {
+  //     // GridFS is a tool to stream files that are larger than 16MB to/from your Mongo db
+  //     // for info on Gridfs see: https://www.npmjs.com/package/gridfs-stream
+  //     // uses an existing mongodb-native db instance
+  //     var gfs = Grid(db, mongo);
 
-      //read from mongodb using the track id
-      response.set('Content-Type', 'audio/mpeg');
-      var readstream = gfs.createReadStream({
-        _id: id
-      });
+  //     //read from mongodb using the track id
+  //     response.set('Content-Type', 'audio/mpeg');
+  //     var readstream = gfs.createReadStream({
+  //       _id: id
+  //     });
 
-      readstream.pipe(response);
-    });
-  });
+  //     readstream.pipe(response);
+  //   });
+  // });
+
+
 
 };
 

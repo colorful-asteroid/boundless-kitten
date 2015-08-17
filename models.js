@@ -9,10 +9,11 @@ var songSchema = new Schema({
   genre: String,
   artist: String,
   trackId: String,
+  filename: String
 });
 
 //========================================================//
-//    Creates Song model                                  //      
+//    Creates Song model                                  //
 //========================================================//
 var Song = mongoose.model('Song', songSchema);
 
@@ -30,5 +31,3 @@ var User = mongoose.model('User', userSchema);
 //========================================================//
 exports.Song = Song;
 exports.User = User;
-
-
