@@ -23,11 +23,11 @@
 
 ## Getting Started
 
-	### Installation
-	Install dependencies	`npm install `
-	### Running Tests
-	
-	`npm test`
+### Installation
+Install dependencies `npm install `
+### Running Tests
+
+`npm test`
 
 ## Developer Info ##
 > Limitations on spec tests due to evolving architecture of application
