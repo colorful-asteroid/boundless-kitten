@@ -38,8 +38,9 @@ var fs = require('fs');
 //           filename: currRecord.filename,
 //           title: currRecord.title,
 //           artist: currRecord.artist,
-//           genre: currRecord.genre,
-//           trackId: id
+//           genre: currRecord.genre
+
+//           // trackId: id
 //         });
 //         titanicTS.save(function(err) {
 //           if (err) console.log(err);
@@ -58,7 +59,7 @@ var fs = require('fs');
 //   });
 // };
 
-// insert();
+//insert();
 
 //======================================================================//
 //  Function to retrieve songs from database                            //
@@ -89,8 +90,6 @@ var retrieve = function(id, response) {
   //     readstream.pipe(response);
   //   });
   // });
-
-
 
 };
 
