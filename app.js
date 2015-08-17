@@ -28,6 +28,7 @@ app.use(function(req, res, next) {
 //   statically serves files from the client directory    //
 //========================================================//
 app.use(express.static('client'));
+app.use(express.static('audio_files'));
 
 // for more info, see: http://expressjs.com/starter/static-files.html
 
