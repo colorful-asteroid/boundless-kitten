@@ -9,56 +9,56 @@ var fs = require('fs');
 //========================================================//
 //   Use this to add many mp3s at once                    //
 //========================================================//
-// var Song = require('./models.js').Song;
-// var songsList = require('./songsList.js');
-// var insert = function() {
-//   // Connection URL
-//   var url = 'mongodb://ds031213.mongolab.com:31213/heroku_sxb8blzn';
-//   MongoClient.connect(url, function(err, db) {
-//     assert.equal(null, err);
-//     console.log("Connected correctly to server FROM REQ HANDLER");
-//     db.authenticate('testDummy', 'testDummy', function(err, res) {
+var Song = require('./models.js').Song;
+var songsList = require('./songsList.js');
+var insert = function() {
+  // Connection URL
+  var url = 'mongodb://ds031213.mongolab.com:31213/heroku_sxb8blzn';
+  MongoClient.connect(url, function(err, db) {
+    assert.equal(null, err);
+    console.log("Connected correctly to server FROM REQ HANDLER");
+    db.authenticate('testDummy', 'testDummy', function(err, res) {
 
-//       //var gfs = Grid(db, mongo);
-//       var currRecord = songsList.shift();
+      //var gfs = Grid(db, mongo);
+      var currRecord = songsList.shift();
 
-//       // var uploadMP3 = function() {
-//       //   var writestream = gfs.createWriteStream({
-//       //     filename: currRecord.title
-//       //   });
-//       //   fs.createReadStream('audio_files/' + currRecord.filename).pipe(writestream);
-//       //   writestream.on('close', function(file) {
-//       //     console.log('file._id :', file._id);
-//       //     makeSongRecord(file._id);
-//       //   });
-//       // };
+      // var uploadMP3 = function() {
+      //   var writestream = gfs.createWriteStream({
+      //     filename: currRecord.title
+      //   });
+      //   fs.createReadStream('audio_files/' + currRecord.filename).pipe(writestream);
+      //   writestream.on('close', function(file) {
+      //     console.log('file._id :', file._id);
+      //     makeSongRecord(file._id);
+      //   });
+      // };
 
-//       var makeSongRecord = function(id) {
-//         var titanicTS = new Song({
-//           filename: currRecord.filename,
-//           title: currRecord.title,
-//           artist: currRecord.artist,
-//           genre: currRecord.genre,
-//           trackId: id
-//         });
-//         titanicTS.save(function(err) {
-//           if (err) console.log(err);
-//           console.log('Wrote Record:', currRecord.title);
-//           currRecord = songsList.shift();
-//           if (currRecord) {
-//             makeSongRecord();
-//           } else {
-//             console.log('completed uploads!!!');
-//           }
-//         });
-//       };
+      var makeSongRecord = function(id) {
+        var titanicTS = new Song({
+          filename: currRecord.filename,
+          title: currRecord.title,
+          artist: currRecord.artist,
+          genre: currRecord.genre,
+          trackId: id
+        });
+        titanicTS.save(function(err) {
+          if (err) console.log(err);
+          console.log('Wrote Record:', currRecord.title);
+          currRecord = songsList.shift();
+          if (currRecord) {
+            makeSongRecord();
+          } else {
+            console.log('completed uploads!!!');
+          }
+        });
+      };
 
-//       makeSongRecord();
-//     });
-//   });
-// };
+      makeSongRecord();
+    });
+  });
+};
 
-// insert();
+insert();
 
 //======================================================================//
 //  Function to retrieve songs from database                            //

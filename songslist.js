@@ -43,7 +43,23 @@ module.exports = [
   { filename: 'The Game - 100 ft. Drake.mp3',
     title: '100',
     artist: 'The Game ft. Drake',
-    genre: 'Hip Hop' }
+    genre: 'Hip Hop' },
+  { filename: 'R. Kelly - Feelin\' On Yo Booty.mp3',
+    title: 'Feelin\' On Yo Booty',
+    artist: 'R. Kelly',
+    genre: 'R n\' B' },
+  { filename: 'R. Kelly - Ignition (Remix).mp3',
+    title: 'Ignition',
+    artist: 'R. Kelly',
+    genre: 'R n\' B' },
+  { filename: 'R. Kelly - Ignition (Remix).mp3',
+    title: 'Ignition',
+    artist: 'R. Kelly',
+    genre: 'R n\' B' },
+  { filename: 'Ginuwine Pony Lyrics.mp3',
+    title: 'Pony',
+    artist: 'Ginuwine',
+    genre: 'R n\' B' }
 ]
 
 
