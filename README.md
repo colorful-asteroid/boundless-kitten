@@ -33,7 +33,7 @@ backend testing:
 `npm test`
 
 frontend testing:
-spec/index.html
+`spec/index.html`
 
 ## Developer Info ##
 > Limited spec tests due to evolving architecture of application
