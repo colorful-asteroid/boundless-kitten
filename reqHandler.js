@@ -63,39 +63,26 @@ var retrieve = function(id, response) {
   // sets connection to remote mongolab db
   var url = 'mongodb://ds031213.mongolab.com:31213/heroku_sxb8blzn';
 
-  // connection is created
-  // MongoClient.connect(url, function(err, db) {
-  //   // assert is a promise for async functions, see required dependecy above
-  //   assert.equal(null, err);
+  //connection is created
+  MongoClient.connect(url, function(err, db) {
+    // assert is a promise for async functions, see required dependecy above
+    assert.equal(null, err);
 
-  //   //mongolab db is authenticated with the username and password arguments provided
-  //   db.authenticate('testDummy', 'testDummy', function(err, res) {
-  //     // GridFS is a tool to stream files that are larger than 16MB to/from your Mongo db
-  //     // for info on Gridfs see: https://www.npmjs.com/package/gridfs-stream
-  //     // uses an existing mongodb-native db instance
-  //     var gfs = Grid(db, mongo);
+    //mongolab db is authenticated with the username and password arguments provided
+    db.authenticate('testDummy', 'testDummy', function(err, res) {
+      // GridFS is a tool to stream files that are larger than 16MB to/from your Mongo db
+      // for info on Gridfs see: https://www.npmjs.com/package/gridfs-stream
+      // uses an existing mongodb-native db instance
+      var gfs = Grid(db, mongo);
 
-  //     //read from mongodb using the track id
-  //     response.set('Content-Type', 'audio/mpeg');
-  //     var readstream = gfs.createReadStream({
-  //       _id: id
-  //     });
+      //read from mongodb using the track id
+      response.set('Content-Type', 'audio/mpeg');
+      var readstream = gfs.createReadStream({
+        _id: id
+      });
 
-  //     readstream.pipe(response);
-  //   });
-  // });
-
-  mongoose.connect('mongodb://testDummy:testDummy@ds031213.mongolab.com:31213/heroku_sxb8blzn');
-  var conn = mongoose.connection;
-  conn.once('open', function() {
-    console.log('open');
-    var gfs = Grid(conn.db, mongoose.mongo);
-    response.set('Content-Type', 'audio/mpeg');
-    var readstream = gfs.createReadStream({
-      _id: id
+      readstream.pipe(response);
     });
-
-    readstream.pipe(response);
   });
 
 };
