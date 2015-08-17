@@ -53,7 +53,7 @@ Install dependencies `npm install `
 [Marc Cristophe](https://github.com/fusupo/)
 
 ## How to Contribute ##
-Contact a person listed in creidts or report an issue on github.
+Contact a person listed in credits or report an issue on github.
 
 ## References ##
 
