@@ -23,7 +23,7 @@
 
 ## Getting Started ##
 
-	* **Installation**
+	* Installation
 		```
 		npm install 
 		```
