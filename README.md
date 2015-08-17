@@ -23,10 +23,8 @@
 
 ## Getting Started ##
 
-	* Installation
-		```
-		npm install 
-		```
+	> Installation
+		`npm install `
 	* **Running Tests**
 		```
 		npm test
