@@ -5,7 +5,6 @@ var assert = require('assert');
 var mongo = require('mongodb');
 var Grid = require('gridfs-stream');
 var fs = require('fs');
-var mongoose = require('mongoose');
 
 //========================================================//
 //   Use this to add many mp3s at once                    //
