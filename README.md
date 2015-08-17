@@ -43,8 +43,11 @@ Install dependencies `npm install `
 
 ## Credits ##
 [Claire Bendersky](https://github.com/cdersky/)
+
 [Vy Cu](https://github.com/veeweeherman/)
+
 [Glenn Gonda](https://github.com/alohaglenn/)
+
 [Marc Cristophe](https://github.com/fusupo/)
 
 ## How to Contribute ##
