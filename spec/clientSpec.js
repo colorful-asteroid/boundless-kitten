@@ -1,12 +1,12 @@
 describe('Constructors', function() {
   describe('Model Constructors Exist', function() {
 
+    it('should have model "AppModel"', function() {
+      expect(AppModel).to.be.a('function');
+    });
+    
     it('should have model constructor "SongModel"', function() {
       expect(SongModel).to.be.a('function');
-    });
-
-    it('should have model "PlayerModel"', function() {
-      expect(PlayerModel).to.be.a('function');
     });
 
   });
@@ -66,23 +66,23 @@ describe('Instances', function() {
     });
 
     //
-
-    it('should have instance "queueA"', function() {
-      expect(queueA).to.be.an('object');
+    
+    it('AppModel should have instance "queueA"', function() {
+      expect(appModel.get('queueA')).to.be.an('object');
     });
 
     it('"queueA" should be an instance of "QueueCollection"', function() {
-      expect(queueA).to.be.instanceOf(QueueCollection);
+      expect(appModel.get('queueA')).to.be.instanceOf(QueueCollection);
     });
 
     //
 
-    it('should have instance "queueB"', function() {
-      expect(queueB).to.be.an('object');
+    it('AppModel should have instance "queueB"', function() {
+      expect(appModel.get('queueB')).to.be.an('object');
     });
 
     it('"queueB" should be an instance of "QueueCollection"', function() {
-      expect(queueB).to.be.instanceOf(QueueCollection);
+      expect(appModel.get('queueB')).to.be.instanceOf(QueueCollection);
     });
   });
 
@@ -118,30 +118,32 @@ describe('Instances', function() {
 
     //
 
-    it('should have instance "playerViewA"', function() {
-      expect(playerViewA).to.be.an('object');
+    it('appView should have instance "playerViewA"', function() {
+      expect(appView.playerViewA).to.be.an('object');
     });
 
     it('"playerViewA" should be an instance of PlayerView"', function() {
-      expect(playerViewA).to.be.instanceOf(PlayerView);
+      expect(appView.playerViewA).to.be.instanceOf(PlayerView);
     });
 
     //
 
-    it('should have instance "playerViewB"', function() {
-      expect(playerViewB).to.be.an('object');
+    it('appView should have instance "playerViewB"', function() {
+      expect(appView.playerViewB).to.be.an('object');
     });
 
     it('"playerViewB" should be an instance of PlayerView"', function() {
-      expect(playerViewB).to.be.instanceOf(PlayerView);
+      expect(appView.playerViewB).to.be.instanceOf(PlayerView);
     });
 
   });
 
   describe('Airhorn', function() {
 
+    var airhorn = 'implemented';
+    
     it('should have airHorn', function() {
-      expect('airhorn').to.equal('implemented');
+      expect(airhorn).to.equal('implemented');
     });
 
   });

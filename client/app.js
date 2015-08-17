@@ -281,8 +281,7 @@ var PlayerView = Backbone.View.extend({
 
   //render the view for the player and get the song from the server
   render: function() {
-    console.log(this.model ? this.model.get('filename') : 'foo');
-    return this.$el.attr('src', this.model ? 'https://trntbl3000.herokuapp.com/track?id=' + this.model.get('trackId') : '');
+    return this.$el.attr('src', this.model ? 'https://trntbl3000.herokuapp.com/' + this.model.get('filename') : '');
   }
 
 });
@@ -300,36 +299,46 @@ var SliderView = Backbone.View.extend({
   }
 });
 
-////////////////////////////////////////////////////////////////////////////////
-//                                                           MODEL INSTANCES  //
-////////////////////////////////////////////////////////////////////////////////
+$(document).ready(function() {
 
-//create a model class for our entire app
-var appModel = new AppModel();
+  $('#airHorn').click(function() {
+    $("<audio></audio>").attr({
+      src: 'sfx/airHorn_1.mp3',
+      autoplay: 'autoplay'
+    });
+  });
 
-////////////////////////////////////////////////////////////////////////////////
-//                                                      COLLECTION INSTANCES  //
-////////////////////////////////////////////////////////////////////////////////
+  ////////////////////////////////////////////////////////////////////////////////
+  //                                                           MODEL INSTANCES  //
+  ////////////////////////////////////////////////////////////////////////////////
 
-//library is a collection of the songs in our database
-var library = new LibraryCollection();
+  //create a model class for our entire app
+  var appModel = new AppModel();
 
-//calling fetch on library makes a GET request and populates our library
-library.fetch();
+  ////////////////////////////////////////////////////////////////////////////////
+  //                                                      COLLECTION INSTANCES  //
+  ////////////////////////////////////////////////////////////////////////////////
 
-////////////////////////////////////////////////////////////////////////////////
-//                                                            VIEW INSTANCES  //
-////////////////////////////////////////////////////////////////////////////////
+  //library is a collection of the songs in our database
+  var library = new LibraryCollection();
 
-//instantiating a new view for our library
-var libraryView = new LibraryCollectionView($('#libraryView'), library, appModel.get('queueA'), appModel.get('queueB'));
+  //calling fetch on library makes a GET request and populates our library
+  library.fetch();
 
-//instantiating our queue collections
-var queueViewA = new QueueCollectionView($('#queueViewA'), appModel.get('queueA'));
+  ////////////////////////////////////////////////////////////////////////////////
+  //                                                            VIEW INSTANCES  //
+  ////////////////////////////////////////////////////////////////////////////////
 
-var queueViewB = new QueueCollectionView($('#queueViewB'), appModel.get('queueB'));
+  //instantiating a new view for our library
+  var libraryView = new LibraryCollectionView($('#libraryView'), library, appModel.get('queueA'), appModel.get('queueB'));
 
-//instantiate a view for our entire app
-var appView = new AppView({
-  model: appModel
+  //instantiating our queue collections
+  var queueViewA = new QueueCollectionView($('#queueViewA'), appModel.get('queueA'));
+
+  var queueViewB = new QueueCollectionView($('#queueViewB'), appModel.get('queueB'));
+
+  //instantiate a view for our entire app
+  var appView = new AppView({
+    model: appModel
+  });
 });
