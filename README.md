@@ -42,20 +42,28 @@ Install dependencies `npm install `
 > This tells Heroku the location of the server. Other environmental variables can be set here.
 
 ## Credits ##
-[![Claire Bendersky](https://github.com/cdersky)]
-[![Vy Cu](https://github.com/veeweeherman)]
-[![Glenn Gonda](https://github.com/alohaglenn)]
-[![Marc Cristophe](https://github.com/fusupo)]
+[Claire Bendersky](https://github.com/cdersky/)
+[Vy Cu](https://github.com/veeweeherman/)
+[Glenn Gonda](https://github.com/alohaglenn/)
+[Marc Cristophe](https://github.com/fusupo/)
 
 ## How to Contribute ##
 
 ## References ##
 > https://nodejs.org/
-> expressjs.com/
-> backbonejs.org/
+
+> https://expressjs.com/
+
+> https://backbonejs.org/
+
 > https://docs.mongodb.org/
-> mongoosejs.com/docs/guide.html
+
+> https://mongoosejs.com/docs/guide.html
+
 > https://mongolab.com/
+
 > https://devcenter.heroku.com/articles/mongolab
+
 > https://www.npmjs.com/package/gridfs-stream
+
 > https://www.npmjs.com/package/assert
