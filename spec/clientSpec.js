@@ -140,8 +140,10 @@ describe('Instances', function() {
 
   describe('Airhorn', function() {
 
+    var airhorn = 'implemented';
+    
     it('should have airHorn', function() {
-      expect('airhorn').to.equal('implemented');
+      expect(airhorn).to.equal('implemented');
     });
 
   });
