@@ -21,14 +21,13 @@
 
 > Integration Testing: Sinon, Supertest
 
-## Getting Started ##
+## Getting Started
 
-	> Installation
-		`npm install `
-	* **Running Tests**
-		```
-		npm test
-		```
+	### Installation
+	Install dependencies	`npm install `
+	### Running Tests
+	
+	`npm test`
 
 ## Developer Info ##
 > Limitations on spec tests due to evolving architecture of application
