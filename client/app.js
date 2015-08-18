@@ -92,7 +92,8 @@ var AppView = Backbone.View.extend({
     this.playerViewA = new PlayerView($('.playerLeft'));
     this.playerViewB = new PlayerView($('.playerRight'));
     this.sliderView = new SliderView($('#sliderContainer'));
-
+    this.speedViewA = new SpeedView($('.playerLeft'));
+    this.speedViewB = new SpeedView($('#SpeedSlide2'));
     //listening for a change to our current song in the corresponding turntable, callback will be invoked when the change event is fired
     //'setSong' is defined in 'PlayerView'
     this.model.on('change:currentSongA', function(model) {
@@ -119,6 +120,10 @@ var AppView = Backbone.View.extend({
       this.playerViewB.setVolume(value < 0 ? 1 + value : 1);
     }, this);
 
+    this.speedViewA.on('speed', function(value){
+      value = parseFloat(value);
+      this.playerViewA.playbackRate(value);
+    }, this);
   }
 });
 
@@ -279,6 +284,10 @@ var PlayerView = Backbone.View.extend({
     this.$el.prop("volume", value);
   },
 
+  playbackRate: function(value){
+    this.$el.prop("playbackRate", value);
+  },
+
   //render the view for the player and get the song from the server
   render: function() {
     return this.$el.attr('src', this.model ? 'https://trntbl3000.herokuapp.com/' + this.model.get('filename') : '');
@@ -295,6 +304,16 @@ var SliderView = Backbone.View.extend({
     container.append(this.$el);
     this.$el.on('input', function() {
       this.trigger('x-fade', this.$el.val());
+    }.bind(this));
+  }
+});
+
+var SpeedView = Backbone.View.extend({
+  el: '<input id="slider" type="range" min="0.5" max="2" step="0.1"></input>',
+  initialize: function(container){
+    container.append(this.$el);
+    this.$el.on('input', function() {
+      this.trigger('speed', this.$el.val());
     }.bind(this));
   }
 });
