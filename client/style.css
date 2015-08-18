@@ -36,5 +36,9 @@ span {
 }
 body {
   background-color: #333;
-  color: #ddd
+  color: #ddd;
+}
+
+#speedSlider {
+  width: 300px;
 }

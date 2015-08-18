@@ -93,7 +93,7 @@ var AppView = Backbone.View.extend({
     this.playerViewB = new PlayerView($('.playerRight'));
     this.sliderView = new SliderView($('#sliderContainer'));
     this.speedViewA = new SpeedView($('.playerLeft'));
-    this.speedViewB = new SpeedView($('#SpeedSlide2'));
+    this.speedViewB = new SpeedView($('.playerRight'));
     //listening for a change to our current song in the corresponding turntable, callback will be invoked when the change event is fired
     //'setSong' is defined in 'PlayerView'
     this.model.on('change:currentSongA', function(model) {
@@ -120,10 +120,18 @@ var AppView = Backbone.View.extend({
       this.playerViewB.setVolume(value < 0 ? 1 + value : 1);
     }, this);
 
-    this.speedViewA.on('speed', function(value){
+    this.speedViewA.on('speedA', function(value){
       value = parseFloat(value);
       this.playerViewA.playbackRate(value);
     }, this);
+    
+    this.speedViewB.on('speedB', function(value){
+      value = parseFloat(value);
+      this.playerViewB.playbackRate(value);
+    }, this);
+
+
+
   }
 });
 
@@ -309,11 +317,18 @@ var SliderView = Backbone.View.extend({
 });
 
 var SpeedView = Backbone.View.extend({
-  el: '<input id="slider" type="range" min="0.5" max="2" step="0.1"></input>',
+  el: '<input type="range" min="0.5" max="2" step="0.01" id="speedSlider"></input>',
   initialize: function(container){
     container.append(this.$el);
     this.$el.on('input', function() {
-      this.trigger('speed', this.$el.val());
+      var slider = this.$el.offsetParent().attr('class');
+      var trig = ""
+      if(slider === 'playerLeft col-md-5'){
+        trig = 'speedA';
+      } else if(slider === 'playerRight col-md-5'){
+        trig = 'speedB';
+      }
+      this.trigger(trig, this.$el.val());
     }.bind(this));
   }
 });
