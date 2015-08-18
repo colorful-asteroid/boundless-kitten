@@ -121,12 +121,14 @@ var AppView = Backbone.View.extend({
     }, this);
 
     this.speedViewA.on('speedA', function(value){
-      value = parseFloat(value);
+      value = parseFloat(value).toFixed(2);
+      $('.playerLeft').find('.timesig').text(value + 'x');
       this.playerViewA.playbackRate(value);
     }, this);
     
     this.speedViewB.on('speedB', function(value){
-      value = parseFloat(value);
+      value = parseFloat(value).toFixed(2);
+      $('.playerRight').find('.timesig').text(value + 'x');
       this.playerViewB.playbackRate(value);
     }, this);
 
