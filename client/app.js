@@ -320,11 +320,14 @@ var PlayerView = Backbone.View.extend({
   },
 
   play: function(){
-    console.log(this.el.paused);
     if(this.el.paused){
       this.el.play();
+      this.$el.parent().find('.arm').removeClass('armpause');
+      this.$el.parent().find('.arm').addClass('armplay');
     } else {
       this.el.pause();
+      this.$el.parent().find('.arm').removeClass('armplay');
+      this.$el.parent().find('.arm').addClass('armpause');
     }
   },
 
@@ -343,10 +346,8 @@ var DeckView = Backbone.View.extend({
       var pp = this.$el.offsetParent().attr('class');
       var trig = ""
       if(pp === 'playerLeft col-md-5'){
-        console.log('click left');
         trig = 'ppA';
       } else if(pp === 'playerRight col-md-5'){
-        console.log('click right');
         trig = 'ppB';
       }
       this.trigger(trig);
@@ -385,7 +386,7 @@ var SpeedView = Backbone.View.extend({
 });
 
 var TableView = Backbone.View.extend({
-  el: '<div><img class="record" src="assets/record.png"></img></div>',
+  el: '<div><img class="record" src="assets/record.png"></img><img class="arm armpause" src="http://donutsfordilla.com/images/djarm.png"/></div>',
   initialize: function(container){
     container.prepend(this.$el);
   }

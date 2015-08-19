@@ -74,6 +74,29 @@ body {
   height: 65px;
 }
 
+.arm {
+  position: absolute;
+  top: 30px;
+  left: 330px;
+  height:140px;
+}
+
+.armplay {
+  -webkit-animation: beat 2s ease;
+  animation-fill-mode: forwards;
+  transform-origin: 80% 16.5%;
+}
+
+.armpause {
+  -webkit-animation: beat 2s ease reverse;
+  animation-fill-mode: forwards;
+  transform-origin: 80% 16.5%;
+}
 @-moz-keyframes spin { 100% { -moz-transform: rotate(360deg); } }
 @-webkit-keyframes spin { 100% { -webkit-transform: rotate(360deg); } }
 @keyframes spin { 100% { -webkit-transform: rotate(360deg); transform:rotate(360deg); } }
+
+@-webkit-keyframes beat {
+    0% { -webkit-transform: rotate(-20deg); }
+    100% { -webkit-transform: rotate(0deg); }   
+}
