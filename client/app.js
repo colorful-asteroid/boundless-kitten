@@ -88,6 +88,9 @@ var QueueCollection = Backbone.Collection.extend({
 //define view class for the entire app
 var AppView = Backbone.View.extend({
   initialize: function(params) {
+    this.startA = 0;
+    this.startB = 0;
+    
     //instantiating our turntables and crossfader
     this.playerViewA = new PlayerView($('.playerLeft'));
     this.playerViewB = new PlayerView($('.playerRight'));
@@ -96,8 +99,18 @@ var AppView = Backbone.View.extend({
     this.speedViewB = new SpeedView($('.playerRight'));
     this.tableA = new TableView($('.playerLeft'));
     this.tableB = new TableView($('.playerRight'));
+    
+    //deckA
     this.deckA = new DeckView($('.playerLeft'));
+    this.playA = new PlayButtonView($('.playerLeft').find('.deck'));
+    this.startPointA = new StartButtonView($('.playerLeft').find('.deck'));
+    this.setStartA = new SetStartButtonView($('.playerLeft').find('.deck'));
+
+    //deckB
     this.deckB = new DeckView($('.playerRight'));
+    this.playB = new PlayButtonView($('.playerRight').find('.deck'));
+
+
     //listening for a change to our current song in the corresponding turntable, callback will be invoked when the change event is fired
     //'setSong' is defined in 'PlayerView'
     this.model.on('change:currentSongA', function(model) {
@@ -148,12 +161,23 @@ var AppView = Backbone.View.extend({
       this.playerViewB.playbackRate(value);
     }, this);
 
-    this.deckA.on('ppA', function(){
+    this.playA.on('ppA', function(){
       this.playerViewA.play();
     }, this);
 
-    this.deckB.on('ppB', function(){
+    this.playB.on('ppB', function(){
       this.playerViewB.play();
+    }, this);
+
+    this.startPointA.on('startPointA', function(){
+      this.playerViewA.currentTime(this.startA);
+      //this.playerViewA.play();
+    }, this);
+
+    this.setStartA.on('setStartPointA', function(){
+      this.startA = this.playerViewA.setCurrentTime(function(time){return time;});
+
+     // this.startA = 30;
     }, this);
   }
 });
@@ -287,7 +311,7 @@ var QueueCollectionView = Backbone.View.extend({
 //create a view class for our turntables, which is instantiated in 'AppView'
 var PlayerView = Backbone.View.extend({
   //create a new audio element with controls
-  el: '<audio preload auto />',
+  el: '<audio controls preload auto />',
 
   //callback is invoked when 'ended' is fired (when song is done playing)
   initialize: function(container) {
@@ -331,6 +355,16 @@ var PlayerView = Backbone.View.extend({
     }
   },
 
+  currentTime: function(time){
+    console.log(time);
+    this.el.currentTime=time;
+  },
+
+  setCurrentTime: function(callback){
+    console.log(this.el.currentTime);
+    return callback(this.el.currentTime);
+  },
+
   //render the view for the player and get the song from the server
   render: function() {
     return this.$el.attr('src', this.model ? 'https://trntbl3000.herokuapp.com/' + this.model.get('filename') : '');
@@ -339,12 +373,20 @@ var PlayerView = Backbone.View.extend({
 });
 
 var DeckView = Backbone.View.extend({
-  el: '<div class="deck"><div id="play">play</div></div>',
+  el: '<div class="deck"></div>',
   initialize: function(container){
     container.append(this.$el);
+  }      
+});
+
+var PlayButtonView = Backbone.View.extend({
+  el: '<div id="play" class="deckButton">▌▌ ▶</div>',
+  initialize: function(container){
+    this.render(container);
     this.$el.on('click', function(){
       var pp = this.$el.offsetParent().attr('class');
-      var trig = ""
+      var trig = "";
+      console.log('clicky');
       if(pp === 'playerLeft col-md-5'){
         trig = 'ppA';
       } else if(pp === 'playerRight col-md-5'){
@@ -352,8 +394,54 @@ var DeckView = Backbone.View.extend({
       }
       this.trigger(trig);
     }.bind(this));
+  },
+  render: function(container){
+    container.append(this.$el);
   }
 });
+
+var StartButtonView = Backbone.View.extend({
+  el: '<div id="startPoint" class="deckButton">start</div>',
+  initialize: function(container){
+    this.render(container);
+    this.$el.on('click', function(){
+      console.log('startleft');
+      var player = this.$el.offsetParent().attr('class');
+      var trig = "";
+
+      if(player === 'playerLeft col-md-5'){
+        trig = 'startPointA';
+      }
+      this.trigger(trig);
+    }.bind(this));
+  },
+  render: function(container){
+    container.append(this.$el);
+  }
+});
+
+var SetStartButtonView = Backbone.View.extend({
+  el: '<div id="setStartPoint" class="deckButton">set</div>',
+  initialize: function(container){
+    this.render(container);
+    this.$el.on('click', function(){
+      var player = this.$el.offsetParent().attr('class');
+      var trig = "";
+
+      if(player === 'playerLeft col-md-5'){
+        trig = 'setStartPointA';
+      }
+      this.trigger(trig);
+    }.bind(this));
+  },
+
+  render: function(container){
+    container.append(this.$el);
+  }
+
+})
+
+
 
 //define a view class for our crossfader which is instantiated in 'AppView'
 var SliderView = Backbone.View.extend({
@@ -393,7 +481,6 @@ var TableView = Backbone.View.extend({
 });
 
 $(document).ready(function() {
-
   $('#airHorn').click(function() {
     $("<audio></audio>").attr({
       src: 'sfx/airHorn_1.mp3',
