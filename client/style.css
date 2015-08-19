@@ -61,12 +61,6 @@ body {
 .spinning {
 }
 
-#play {
-  width: 50px;
-  height: 50px;
-  background-color: red;
-}
-
 .pad {
   background-image: url('assets/logo.png');
   background-size:cover;
@@ -92,6 +86,24 @@ body {
   animation-fill-mode: forwards;
   transform-origin: 80% 16.5%;
 }
+
+.deck {
+  background-color: #777;
+  width: 350px;
+  padding: 10px;
+  margin: 10px;
+}
+
+.deckButton {
+  background-color: #222;
+  box-shadow: 2px 2px 4px black;
+  line-height: 50px;
+  height: 50px;
+  width: 50px;
+  margin: 5px;
+  float: left;
+}
+
 @-moz-keyframes spin { 100% { -moz-transform: rotate(360deg); } }
 @-webkit-keyframes spin { 100% { -webkit-transform: rotate(360deg); } }
 @keyframes spin { 100% { -webkit-transform: rotate(360deg); transform:rotate(360deg); } }
