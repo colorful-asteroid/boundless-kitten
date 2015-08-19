@@ -38,7 +38,18 @@ var AppModel = Backbone.Model.extend({
 });
 
 //defining a model for a song
-var SongModel = Backbone.Model.extend({});
+var SongModel = Backbone.Model.extend({
+
+  // This function is called from the html5 player in playerView
+  // It triggers an 'ended' event that is listened to by its collection, QueueCollection
+  play: function(){
+    // Triggering an event here will also trigger the event on the collection
+    this.trigger('play', this);
+  },
+  ended: function(){
+    this.trigger('ended', this);
+  }
+});
 
 ////////////////////////////////////////////////////////////////////////////////
 //                                                               COLLECTIONS  //
@@ -58,6 +69,12 @@ var QueueCollection = Backbone.Collection.extend({
   //model contained within the queue
   model: SongModel,
 
+  // When a song ends, it triggers an ended event. This is caught here by QueueCollection
+  initialize: function(){
+    this.on( 'dequeue', this.dequeue, this );
+    this.on( 'ended', this.playNext, this );
+  },
+
   //define enqueue method, which will be fired from the button in 'LibrarySongView'
   enqueue: function(song) {
     //add song to the queue
@@ -72,12 +89,35 @@ var QueueCollection = Backbone.Collection.extend({
   //define dequeue method, which will be fired from 'AppModel'
   dequeue: function() {
     //remove the song
+    console.log('in dequeue');
     this.shift();
     if (this.length >= 1) {
-      this.trigger('playsong', this.at(0));
+      console.log('inside if statement');
+      // this.trigger('playsong', this.at(0));
+      this.at(0).play();
     } else {
       this.trigger('playsong');
     }
+
+    //  if( this.at(0) === song ){
+    //   this.playNext();
+    // } else {
+    //   this.remove(song);
+    // }
+  },
+
+  playNext: function(){
+    console.log('in playNext');
+    this.shift();
+    if( this.length >= 1 ){
+      this.playFirst();
+    } else {
+      this.trigger('stop');
+    }
+  },
+
+  playFirst: function(){
+    this.at(0).play();
   }
 });
 
@@ -111,6 +151,7 @@ var AppView = Backbone.View.extend({
     //when song ends, the callback function will be invoked and the ended song will be removed. 'dequeueA/B' is defined in 'AppModel'
     this.playerViewA.on('ended', function() {
       this.model.dequeueA();
+      this.model.play
     }, this);
     this.playerViewB.on('ended', function() {
       this.model.dequeueB();
@@ -192,11 +233,11 @@ var LibrarySongView = Backbone.View.extend({
 
     //render this view which will consist of two queue buttons with song title in the same row
     this.$el
-      .append(tdA)
-      .append('<td>' + this.model.get('title') + '</td>')
-      .append('<td>' + this.model.get('artist') + '</td>')
-      .append('<td>' + this.model.get('genre') + '</td>')
-      .append(tdB);
+    .append(tdA)
+    .append('<td>' + this.model.get('title') + '</td>')
+    .append('<td>' + this.model.get('artist') + '</td>')
+    .append('<td>' + this.model.get('genre') + '</td>')
+    .append(tdB);
 
     return this;
 
@@ -287,9 +328,10 @@ var QueueCollectionView = Backbone.View.extend({
 //create a view class for our turntables, which is instantiated in 'AppView'
 var PlayerView = Backbone.View.extend({
   //create a new audio element with controls
-  el: '<audio preload auto />',
+  el: '<audio controls preload auto />',
 
   //callback is invoked when 'ended' is fired (when song is done playing)
+  // NOTE: this is triggered by the html 5 player and is being listened for by our
   initialize: function(container) {
     this.$el.on('ended', function() {
       this.trigger('ended', this.model);
@@ -302,7 +344,7 @@ var PlayerView = Backbone.View.extend({
 
   //'AppView' is listening for 'setSong' to fire
   setSong: function(song) {
-    this.model = song;
+    this.model = song; // Sets the model for player to be a song
     if (!this.model) {
       this.el.pause();
     }
@@ -344,7 +386,7 @@ var DeckView = Backbone.View.extend({
     container.append(this.$el);
     this.$el.on('click', function(){
       var pp = this.$el.offsetParent().attr('class');
-      var trig = ""
+      var trig = "";
       if(pp === 'playerLeft col-md-5'){
         trig = 'ppA';
       } else if(pp === 'playerRight col-md-5'){
@@ -374,7 +416,7 @@ var SpeedView = Backbone.View.extend({
     container.append(this.$el);
     this.$el.on('input', function() {
       var slider = this.$el.offsetParent().attr('class');
-      var trig = ""
+      var trig = "";
       if(slider === 'playerLeft col-md-5'){
         trig = 'speedA';
       } else if(slider === 'playerRight col-md-5'){
