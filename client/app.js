@@ -94,6 +94,10 @@ var AppView = Backbone.View.extend({
     this.sliderView = new SliderView($('#sliderContainer'));
     this.speedViewA = new SpeedView($('.playerLeft'));
     this.speedViewB = new SpeedView($('.playerRight'));
+    this.tableA = new TableView($('.playerLeft'));
+    this.tableB = new TableView($('.playerRight'));
+    this.deckA = new DeckView($('.playerLeft'));
+    this.deckB = new DeckView($('.playerRight'));
     //listening for a change to our current song in the corresponding turntable, callback will be invoked when the change event is fired
     //'setSong' is defined in 'PlayerView'
     this.model.on('change:currentSongA', function(model) {
@@ -122,18 +126,37 @@ var AppView = Backbone.View.extend({
 
     this.speedViewA.on('speedA', function(value){
       value = parseFloat(value).toFixed(2);
-      $('.playerLeft').find('.timesig').text(value + 'x');
       this.playerViewA.playbackRate(value);
+      var speed = 2/value;
+      $('.playerLeft').find('.timesig').text(value + 'x');
+      $('.playerLeft').find('.spinning').css({
+        '-webkit-animation': 'spin ' + speed + 's linear infinite',
+        '-moz-animation': 'spin ' + speed + 's linear infinite', 
+        'animation': 'spin ' + speed + 's linear infinite'
+      });
     }, this);
     
     this.speedViewB.on('speedB', function(value){
       value = parseFloat(value).toFixed(2);
       $('.playerRight').find('.timesig').text(value + 'x');
+      var speed = 2/value;
+      $('.playerRight').find('.spinning').css({
+        '-webkit-animation': 'spin ' + speed + 's linear infinite',
+        '-moz-animation': 'spin ' + speed + 's linear infinite', 
+        'animation': 'spin ' + speed + 's linear infinite'
+      });
       this.playerViewB.playbackRate(value);
     }, this);
 
+    this.deckA.on('ppA', function(){
+      this.playerViewA.play();
+      $('.playerLeft').find('.record').toggleClass('spinning');
+    }, this);
 
-
+    this.deckB.on('ppB', function(){
+      this.playerViewB.play();
+      $('.playerRight').find('.record').toggleClass('spinning');
+    }, this);
   }
 });
 
@@ -266,7 +289,7 @@ var QueueCollectionView = Backbone.View.extend({
 //create a view class for our turntables, which is instantiated in 'AppView'
 var PlayerView = Backbone.View.extend({
   //create a new audio element with controls
-  el: '<audio controls preload auto />',
+  el: '<audio preload auto />',
 
   //callback is invoked when 'ended' is fired (when song is done playing)
   initialize: function(container) {
@@ -298,11 +321,39 @@ var PlayerView = Backbone.View.extend({
     this.$el.prop("playbackRate", value);
   },
 
+  play: function(){
+    console.log(this.el.paused);
+    if(this.el.paused){
+      this.el.play();
+    } else {
+      this.el.pause();
+    }
+  },
+
   //render the view for the player and get the song from the server
   render: function() {
     return this.$el.attr('src', this.model ? 'https://trntbl3000.herokuapp.com/' + this.model.get('filename') : '');
   }
 
+});
+
+var DeckView = Backbone.View.extend({
+  el: '<div class="deck"><div id="play">play</div></div>',
+  initialize: function(container){
+    container.append(this.$el);
+    this.$el.on('click', function(){
+      var pp = this.$el.offsetParent().attr('class');
+      var trig = ""
+      if(pp === 'playerLeft col-md-5'){
+        console.log('click left');
+        trig = 'ppA';
+      } else if(pp === 'playerRight col-md-5'){
+        console.log('click right');
+        trig = 'ppB';
+      }
+      this.trigger(trig);
+    }.bind(this));
+  }
 });
 
 //define a view class for our crossfader which is instantiated in 'AppView'
@@ -332,6 +383,13 @@ var SpeedView = Backbone.View.extend({
       }
       this.trigger(trig, this.$el.val());
     }.bind(this));
+  }
+});
+
+var TableView = Backbone.View.extend({
+  el: '<div><img class="record" src="assets/record.png"></img></div>',
+  initialize: function(container){
+    container.prepend(this.$el);
   }
 });
 
