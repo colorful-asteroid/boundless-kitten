@@ -129,7 +129,7 @@ var AppView = Backbone.View.extend({
       this.playerViewA.playbackRate(value);
       var speed = 2/value;
       $('.playerLeft').find('.timesig').text(value + 'x');
-      $('.playerLeft').find('.spinning').css({
+      $('.playerLeft').find('.record').css({
         '-webkit-animation': 'spin ' + speed + 's linear infinite',
         '-moz-animation': 'spin ' + speed + 's linear infinite', 
         'animation': 'spin ' + speed + 's linear infinite'
@@ -140,7 +140,7 @@ var AppView = Backbone.View.extend({
       value = parseFloat(value).toFixed(2);
       $('.playerRight').find('.timesig').text(value + 'x');
       var speed = 2/value;
-      $('.playerRight').find('.spinning').css({
+      $('.playerRight').find('.record').css({
         '-webkit-animation': 'spin ' + speed + 's linear infinite',
         '-moz-animation': 'spin ' + speed + 's linear infinite', 
         'animation': 'spin ' + speed + 's linear infinite'
@@ -150,12 +150,10 @@ var AppView = Backbone.View.extend({
 
     this.deckA.on('ppA', function(){
       this.playerViewA.play();
-      $('.playerLeft').find('.record').toggleClass('spinning');
     }, this);
 
     this.deckB.on('ppB', function(){
       this.playerViewB.play();
-      $('.playerRight').find('.record').toggleClass('spinning');
     }, this);
   }
 });
