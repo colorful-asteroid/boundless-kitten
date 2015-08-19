@@ -96,8 +96,17 @@ var AppView = Backbone.View.extend({
     this.speedViewB = new SpeedView($('.playerRight'));
     this.tableA = new TableView($('.playerLeft'));
     this.tableB = new TableView($('.playerRight'));
+    
+    //deckA
     this.deckA = new DeckView($('.playerLeft'));
+    this.playA = new PlayButtonView($('.playerLeft').find('.deck'));
+    this.startPointA = new StartButtonView($('.playerLeft').find('.deck'));
+
+    //deckB
     this.deckB = new DeckView($('.playerRight'));
+    this.playB = new PlayButtonView($('.playerRight').find('.deck'));
+
+
     //listening for a change to our current song in the corresponding turntable, callback will be invoked when the change event is fired
     //'setSong' is defined in 'PlayerView'
     this.model.on('change:currentSongA', function(model) {
@@ -148,12 +157,17 @@ var AppView = Backbone.View.extend({
       this.playerViewB.playbackRate(value);
     }, this);
 
-    this.deckA.on('ppA', function(){
+    this.playA.on('ppA', function(){
       this.playerViewA.play();
     }, this);
 
-    this.deckB.on('ppB', function(){
+    this.playB.on('ppB', function(){
       this.playerViewB.play();
+    }, this);
+
+    this.startPointA.on('startPointA', function(){
+      this.playerViewA.currentTime(50);
+      //this.playerViewA.play();
     }, this);
   }
 });
@@ -331,6 +345,12 @@ var PlayerView = Backbone.View.extend({
     }
   },
 
+  currentTime: function(time){
+    console.log(this.el.currentTime);
+    this.el.currentTime=time;
+    console.log(this.el.currentTime);
+  },
+
   //render the view for the player and get the song from the server
   render: function() {
     return this.$el.attr('src', this.model ? 'https://trntbl3000.herokuapp.com/' + this.model.get('filename') : '');
@@ -339,12 +359,20 @@ var PlayerView = Backbone.View.extend({
 });
 
 var DeckView = Backbone.View.extend({
-  el: '<div class="deck"><div id="play">play</div></div>',
+  el: '<div class="deck"></div>',
   initialize: function(container){
     container.append(this.$el);
+  }      
+});
+
+var PlayButtonView = Backbone.View.extend({
+  el: '<div id="play" class="deckButton">▌▌ ▶</div>',
+  initialize: function(container){
+    this.render(container);
     this.$el.on('click', function(){
       var pp = this.$el.offsetParent().attr('class');
-      var trig = ""
+      var trig = "";
+      console.log('clicky');
       if(pp === 'playerLeft col-md-5'){
         trig = 'ppA';
       } else if(pp === 'playerRight col-md-5'){
@@ -352,6 +380,30 @@ var DeckView = Backbone.View.extend({
       }
       this.trigger(trig);
     }.bind(this));
+  },
+  render: function(container){
+    container.append(this.$el);
+  }
+});
+
+var StartButtonView = Backbone.View.extend({
+  el: '<div id="startPoint" class="deckButton">start point</div>',
+  initialize: function(container){
+    this.render(container);
+    this.$el.on('click', function(){
+      console.log('startleft');
+      var player = this.$el.offsetParent().attr('class');
+      var trig = "";
+
+      if(player === 'playerLeft col-md-5'){
+        trig = 'startPointA';
+      }
+      console.log(trig);
+      this.trigger(trig);
+    }.bind(this));
+  },
+  render: function(container){
+    container.append(this.$el);
   }
 });
 
