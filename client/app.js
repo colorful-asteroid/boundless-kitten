@@ -103,13 +103,14 @@ var AppView = Backbone.View.extend({
     //deckA
     this.deckA = new DeckView($('.playerLeft'));
     this.playA = new PlayButtonView($('.playerLeft').find('.deck'));
-    this.startPointA = new StartButtonView($('.playerLeft').find('.deck'));
-    this.setStartA = new SetStartButtonView($('.playerLeft').find('.deck'));
+    this.startPointA = new StartButtonView($('.deck', '.playerLeft'));
+    this.setStartA = new SetStartButtonView($('.deck', '.playerLeft'));
 
     //deckB
     this.deckB = new DeckView($('.playerRight'));
-    this.playB = new PlayButtonView($('.playerRight').find('.deck'));
-
+    this.playB = new PlayButtonView($('.deck', '.playerRight'));
+    this.startPointB = new StartButtonView($('.deck', '.playerRight'));
+    this.setStartB = new SetStartButtonView($('.deck', '.playerRight'));
 
     //listening for a change to our current song in the corresponding turntable, callback will be invoked when the change event is fired
     //'setSong' is defined in 'PlayerView'
@@ -171,14 +172,20 @@ var AppView = Backbone.View.extend({
 
     this.startPointA.on('startPointA', function(){
       this.playerViewA.currentTime(this.startA);
-      //this.playerViewA.play();
+    }, this);
+
+    this.startPointB.on('startPointB', function(){
+      this.playerViewB.currentTime(this.startB);
     }, this);
 
     this.setStartA.on('setStartPointA', function(){
       this.startA = this.playerViewA.setCurrentTime(function(time){return time;});
-
-     // this.startA = 30;
     }, this);
+
+    this.setStartB.on('setStartPointB', function(){
+      this.startB = this.playerViewB.setCurrentTime(function(time){return time;});
+    }, this);
+
   }
 });
 
@@ -356,12 +363,10 @@ var PlayerView = Backbone.View.extend({
   },
 
   currentTime: function(time){
-    console.log(time);
     this.el.currentTime=time;
   },
 
   setCurrentTime: function(callback){
-    console.log(this.el.currentTime);
     return callback(this.el.currentTime);
   },
 
@@ -386,7 +391,6 @@ var PlayButtonView = Backbone.View.extend({
     this.$el.on('click', function(){
       var pp = this.$el.offsetParent().attr('class');
       var trig = "";
-      console.log('clicky');
       if(pp === 'playerLeft col-md-5'){
         trig = 'ppA';
       } else if(pp === 'playerRight col-md-5'){
@@ -405,12 +409,13 @@ var StartButtonView = Backbone.View.extend({
   initialize: function(container){
     this.render(container);
     this.$el.on('click', function(){
-      console.log('startleft');
       var player = this.$el.offsetParent().attr('class');
       var trig = "";
 
       if(player === 'playerLeft col-md-5'){
         trig = 'startPointA';
+      } else {
+        trig = 'startPointB';
       }
       this.trigger(trig);
     }.bind(this));
@@ -430,6 +435,8 @@ var SetStartButtonView = Backbone.View.extend({
 
       if(player === 'playerLeft col-md-5'){
         trig = 'setStartPointA';
+      } else {
+        trig = 'setStartPointB';
       }
       this.trigger(trig);
     }.bind(this));
