@@ -347,25 +347,9 @@ var QueueSongView = Backbone.View.extend({
   initialize: function(model) {
     this.model = model;
     this.render();
-    // this.testing(this.$el);
   },
 
-  // testing: function(model){
-  //   this.model.on('click', function(some){
-  //     console.log('testing 123', some);
-  //   });
-  // },
-  // testing: function(thing){
-  //   thing.on('click', function(){
-  //     // console.log('Logging this thing', thing, '\nLogging this only', this);
-  //     // Get the position where this is in the queue collection
-  //       // Splice that element from the collection.
-  //       // Update current songs and whatnot        
-  //       // thing.detach();
-  //   });
-  // },
-
-  //render the view and append the song title to the row
+    //render the view and append the song title to the row
   render: function() {
     return this.$el.append('<td>' + this.model.get('title') + '</td>');
   },
