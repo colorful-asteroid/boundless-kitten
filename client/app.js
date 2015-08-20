@@ -65,6 +65,7 @@ var SongModel = Backbone.Model.extend({
     player = this.getPlayer(player);
     $('.arm', player).removeClass('armplay');
     $('.arm', player).addClass('armpause');
+    $('.record', player).removeClass('spinning');
   },
   // This function is called from the html5 player in playerView
   // It triggers an 'ended' event that is listened to by its collection, QueueCollection
@@ -72,6 +73,7 @@ var SongModel = Backbone.Model.extend({
     player = this.getPlayer(player);
     $('.arm', player).removeClass('armpause');
     $('.arm', player).addClass('armplay');
+    $('.record', player).addClass('spinning');
 
     // Triggering an event here will also trigger the event on the collection
     this.trigger('playsong', this);
@@ -220,7 +222,7 @@ var AppView = Backbone.View.extend({
       this.playerViewA.playbackRate(value);
       var speed = 2/value;
       $('.playerLeft').find('.timesig').text(value + 'x');
-      $('.playerLeft').find('.record').css({
+      $('.playerLeft').find('.spinning').css({
         '-webkit-animation': 'spin ' + speed + 's linear infinite',
         '-moz-animation': 'spin ' + speed + 's linear infinite', 
         'animation': 'spin ' + speed + 's linear infinite'
@@ -231,7 +233,7 @@ var AppView = Backbone.View.extend({
       value = parseFloat(value).toFixed(2);
       $('.playerRight').find('.timesig').text(value + 'x');
       var speed = 2/value;
-      $('.playerRight').find('.record').css({
+      $('.playerRight').find('.spinning').css({
         '-webkit-animation': 'spin ' + speed + 's linear infinite',
         '-moz-animation': 'spin ' + speed + 's linear infinite', 
         'animation': 'spin ' + speed + 's linear infinite'
