@@ -10,6 +10,7 @@ var AppModel = Backbone.Model.extend({
     //instatiating both queue collections. 'queueA' and 'queueB' will both be an array of objects
     var queueA = new QueueCollection([]);
     var queueB = new QueueCollection([]);
+    console.log('Loggin queue A: ', queueA);
 
     //setting a queue attribute that will have events: add, playsong, and remove
     this.set('queueA', queueA);
@@ -20,21 +21,24 @@ var AppModel = Backbone.Model.extend({
     this.set('currentSongB', new SongModel());
 
     this.get('queueA').on('playsong', function(song){
-      this.set('currentSongA', song);
+       this.set('currentSongA', song);
     }, this);
 
     this.get('queueB').on('playsong', function(song){
       this.set('currentSongB', song);
     }, this);
 
+    // console.log('Console longgin from line 30', this.get('currentSongA'));
     
     //binding a callback to both queues that will set the current song. it will be invoked when the 'playsong' event is fired from 'QueueCollection'
     queueA.on('playsong', function(song) {
       this.set('currentSongA', song);
     }, this);
+    
     queueB.on('playsong', function(song) {
       this.set('currentSongB', song);
     }, this);
+
   },
 
   //dequeue methods for each queue
@@ -55,9 +59,16 @@ var SongModel = Backbone.Model.extend({
     // Triggering an event here will also trigger the event on the collection
     this.trigger('playsong', this);
   },
+
+  dequeue: function(){
+    this.trigger('dequeue', this); // Dequeue will be listened to on the QueueCollection
+  },
+
   ended: function(){
     this.trigger('ended', this); // ended event will be listened to the QueueCollection
-  }
+  },
+
+
 });
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -82,6 +93,9 @@ var QueueCollection = Backbone.Collection.extend({
   initialize: function(){
     this.on( 'dequeue', this.dequeue, this );
     this.on( 'ended', this.playNext, this );
+    this.on( 'remove', this.dequeue, this);
+    
+    // this.dequeueTest();
   },
 
   //define enqueue method, which will be fired from the button in 'LibrarySongView'
@@ -95,17 +109,17 @@ var QueueCollection = Backbone.Collection.extend({
     }
   },
 
-  //define dequeue method, which will be fired from 'AppModel'
-  dequeue: function() {
+   //define dequeue method, which will be fired from 'AppModel'
+  dequeue: function(song) {
     //remove the song
+    
     console.log('in dequeue');
-    this.shift();
-    if (this.length >= 1) {
+    console.log('logging this model: ', song);
+    if (this.at(0) === song) {
       console.log('inside if statement');
-      // this.trigger('playsong', this.at(0));
-      this.at(0).play();
-    } else {
-      this.trigger('playsong');
+      this.playNext();
+    } else {      
+      this.remove(song);
     }
 
   },
@@ -121,7 +135,14 @@ var QueueCollection = Backbone.Collection.extend({
 
   playFirst: function(){
     this.at(0).play();
+  },
+
+  events: {
+    'click': function() {
+      this.model.dequeue();
+    }
   }
+
 });
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -251,7 +272,12 @@ var LibrarySongView = Backbone.View.extend({
     //create a button that, when clicked, will send a song to queueA
     var queueBtnA = $('<input type="button" class="btn btn-default btn-xs" value="QueueA"></input>');
     queueBtnA.click(function() {
+      
       this.queueA.enqueue(this.model.clone());
+    }.bind(this));
+
+    queueBtnA.dblclick(function() {
+      this.queueA.dequeue(this.model.clone());
     }.bind(this));
     //create a cell in our row that we can append our button to
     var tdA = $('<td>');
@@ -323,9 +349,15 @@ var QueueSongView = Backbone.View.extend({
     this.render();
   },
 
-  //render the view and append the song title to the row
+    //render the view and append the song title to the row
   render: function() {
     return this.$el.append('<td>' + this.model.get('title') + '</td>');
+  },
+
+  events: {
+    'click': function(){
+      this.model.dequeue();
+    }
   }
 });
 
