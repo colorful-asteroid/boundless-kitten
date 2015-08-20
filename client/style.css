@@ -52,6 +52,8 @@ body {
 }
 
 .record {
+  position: relative;
+  top: 37px;
   -webkit-animation:spin 2s linear infinite;
   -moz-animation:spin 2s linear infinite;
   animation:spin 2s linear infinite;
@@ -70,19 +72,19 @@ body {
 
 .arm {
   position: absolute;
-  top: 30px;
-  left: 330px;
-  height:140px;
+  top: 6%;
+  left: 46.5%;
+  height:150px;
 }
 
 .armplay {
-  -webkit-animation: beat 2s ease;
+  -webkit-animation: beat 1s ease;
   animation-fill-mode: forwards;
   transform-origin: 80% 16.5%;
 }
 
 .armpause {
-  -webkit-animation: beat 2s ease reverse;
+  -webkit-animation: beat 1s ease reverse;
   animation-fill-mode: forwards;
   transform-origin: 80% 16.5%;
 }
@@ -92,6 +94,7 @@ body {
   width: 350px;
   padding: 10px;
   margin: 10px;
+  height: 80px;
 }
 
 .deckButton {
@@ -102,6 +105,24 @@ body {
   width: 50px;
   margin: 5px;
   float: left;
+  cursor: pointer;
+}
+
+.deckButton:hover {
+  background-color: #444;
+}
+
+.deckButton:active {
+  box-shadow: 0;
+  background-color: #888;
+}
+
+.turntable {
+  height: 280px;
+  background-image: url('assets/table_shadow.png');
+  background-position: center;
+  background-size: 280px 280px;
+  background-repeat: no-repeat;
 }
 
 @-moz-keyframes spin { 100% { -moz-transform: rotate(360deg); } }
@@ -109,6 +130,6 @@ body {
 @keyframes spin { 100% { -webkit-transform: rotate(360deg); transform:rotate(360deg); } }
 
 @-webkit-keyframes beat {
-    0% { -webkit-transform: rotate(-20deg); }
-    100% { -webkit-transform: rotate(0deg); }   
+    0% { -webkit-transform: rotate(-42deg); }
+    100% { -webkit-transform: rotate(-20deg); }   
 }
