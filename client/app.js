@@ -19,13 +19,14 @@ var AppModel = Backbone.Model.extend({
     this.set('currentSongA', new SongModel());
     this.set('currentSongB', new SongModel());
 
-    
-
     this.get('queueA').on('playsong', function(song){
-      console.log('inside queueA function');
       this.set('currentSongA', song);
-      console.log(this.get('currentSongA'));
     }, this);
+
+    this.get('queueB').on('playsong', function(song){
+      this.set('currentSongB', song);
+    }, this);
+
     
     //binding a callback to both queues that will set the current song. it will be invoked when the 'playsong' event is fired from 'QueueCollection'
     queueA.on('playsong', function(song) {
