@@ -1,4 +1,4 @@
-"use strict";
+(function(){"use strict";})();
 
 ////////////////////////////////////////////////////////////////////////////////
 //                                                                    MODELS  //
@@ -48,14 +48,32 @@ var AppModel = Backbone.Model.extend({
 
 //defining a model for a song
 var SongModel = Backbone.Model.extend({
+  getPlayer: function(player){
+    player = player.offsetParent().attr('class');
+    if(player === 'playerLeft col-md-5'){
+      return '.playerLeft';
+    } else {
+      return '.playerRight';
+    }
+  },
 
+  pause: function(player){
+    player = this.getPlayer(player);
+    $('.arm', player).removeClass('armplay');
+    $('.arm', player).addClass('armpause');
+  },
   // This function is called from the html5 player in playerView
   // It triggers an 'ended' event that is listened to by its collection, QueueCollection
-  play: function(){
+  play: function(player){
+    player = this.getPlayer(player);
+    $('.arm', player).removeClass('armpause');
+    $('.arm', player).addClass('armplay');
+
     // Triggering an event here will also trigger the event on the collection
     this.trigger('playsong', this);
   },
-  ended: function(){
+  ended: function(player){
+    this.pause(player);
     this.trigger('ended', this); // ended event will be listened to the QueueCollection
   }
 });
@@ -98,11 +116,8 @@ var QueueCollection = Backbone.Collection.extend({
   //define dequeue method, which will be fired from 'AppModel'
   dequeue: function() {
     //remove the song
-    console.log('in dequeue');
     this.shift();
     if (this.length >= 1) {
-      console.log('inside if statement');
-      // this.trigger('playsong', this.at(0));
       this.at(0).play();
     } else {
       this.trigger('playsong');
@@ -367,8 +382,16 @@ var PlayerView = Backbone.View.extend({
   // NOTE: this is triggered by the html 5 player and is being listened for by our
   initialize: function(container) {
     this.$el.on('ended', function() {
-      this.model.ended(); // Will call the ended function on a SongModel
+      this.model.ended(this.$el); // Will call the ended function on a SongModel
       this.trigger('ended', this.model);
+    }.bind(this));
+
+    this.$el.on('play', function(){
+      this.model.play(this.$el);  
+    }.bind(this));
+
+    this.$el.on('pause', function(){
+      this.model.pause(this.$el);
     }.bind(this));
 
     //clear song out of player
@@ -398,12 +421,8 @@ var PlayerView = Backbone.View.extend({
   play: function(){
     if(this.el.paused){
       this.el.play();
-      this.$el.parent().find('.arm').removeClass('armpause');
-      this.$el.parent().find('.arm').addClass('armplay');
     } else {
       this.el.pause();
-      this.$el.parent().find('.arm').removeClass('armplay');
-      this.$el.parent().find('.arm').addClass('armpause');
     }
   },
 
@@ -491,7 +510,7 @@ var SetStartButtonView = Backbone.View.extend({
     container.append(this.$el);
   }
 
-})
+});
 
 
 
