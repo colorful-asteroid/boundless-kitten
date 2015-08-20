@@ -1,4 +1,4 @@
-"use strict";
+(function(){"use strict";})();
 
 ////////////////////////////////////////////////////////////////////////////////
 //                                                                    MODELS  //
@@ -10,6 +10,7 @@ var AppModel = Backbone.Model.extend({
     //instatiating both queue collections. 'queueA' and 'queueB' will both be an array of objects
     var queueA = new QueueCollection([]);
     var queueB = new QueueCollection([]);
+    console.log('Loggin queue A: ', queueA);
 
     //setting a queue attribute that will have events: add, playsong, and remove
     this.set('queueA', queueA);
@@ -20,21 +21,24 @@ var AppModel = Backbone.Model.extend({
     this.set('currentSongB', new SongModel());
 
     this.get('queueA').on('playsong', function(song){
-      this.set('currentSongA', song);
+       this.set('currentSongA', song);
     }, this);
 
     this.get('queueB').on('playsong', function(song){
       this.set('currentSongB', song);
     }, this);
 
+    // console.log('Console longgin from line 30', this.get('currentSongA'));
     
     //binding a callback to both queues that will set the current song. it will be invoked when the 'playsong' event is fired from 'QueueCollection'
     queueA.on('playsong', function(song) {
       this.set('currentSongA', song);
     }, this);
+    
     queueB.on('playsong', function(song) {
       this.set('currentSongB', song);
     }, this);
+
   },
 
   //dequeue methods for each queue
@@ -48,16 +52,39 @@ var AppModel = Backbone.Model.extend({
 
 //defining a model for a song
 var SongModel = Backbone.Model.extend({
+  getPlayer: function(player){
+    player = player.offsetParent().attr('class');
+    if(player === 'playerLeft col-md-5'){
+      return '.playerLeft';
+    } else {
+      return '.playerRight';
+    }
+  },
 
+  pause: function(player){
+    player = this.getPlayer(player);
+    $('.arm', player).removeClass('armplay');
+    $('.arm', player).addClass('armpause');
+  },
   // This function is called from the html5 player in playerView
   // It triggers an 'ended' event that is listened to by its collection, QueueCollection
-  play: function(){
+  play: function(player){
+    player = this.getPlayer(player);
+    $('.arm', player).removeClass('armpause');
+    $('.arm', player).addClass('armplay');
+
     // Triggering an event here will also trigger the event on the collection
     this.trigger('playsong', this);
   },
+  dequeue: function(){
+    this.trigger('dequeue', this); // Dequeue will be listened to on the QueueCollection
+  },
   ended: function(){
+    this.pause(player);
     this.trigger('ended', this); // ended event will be listened to the QueueCollection
-  }
+  },
+
+
 });
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -82,6 +109,9 @@ var QueueCollection = Backbone.Collection.extend({
   initialize: function(){
     this.on( 'dequeue', this.dequeue, this );
     this.on( 'ended', this.playNext, this );
+    this.on( 'remove', this.dequeue, this);
+    
+    // this.dequeueTest();
   },
 
   //define enqueue method, which will be fired from the button in 'LibrarySongView'
@@ -95,17 +125,13 @@ var QueueCollection = Backbone.Collection.extend({
     }
   },
 
-  //define dequeue method, which will be fired from 'AppModel'
-  dequeue: function() {
+   //define dequeue method, which will be fired from 'AppModel'
+  dequeue: function(song) {
     //remove the song
-    console.log('in dequeue');
-    this.shift();
-    if (this.length >= 1) {
-      console.log('inside if statement');
-      // this.trigger('playsong', this.at(0));
-      this.at(0).play();
-    } else {
-      this.trigger('playsong');
+    if (this.at(0) === song) {
+      this.playNext();
+    } else {      
+      this.remove(song);
     }
 
   },
@@ -121,7 +147,14 @@ var QueueCollection = Backbone.Collection.extend({
 
   playFirst: function(){
     this.at(0).play();
+  },
+
+  events: {
+    'click': function() {
+      this.model.dequeue();
+    }
   }
+
 });
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -251,7 +284,12 @@ var LibrarySongView = Backbone.View.extend({
     //create a button that, when clicked, will send a song to queueA
     var queueBtnA = $('<input type="button" class="btn btn-default btn-xs" value="QueueA"></input>');
     queueBtnA.click(function() {
+      
       this.queueA.enqueue(this.model.clone());
+    }.bind(this));
+
+    queueBtnA.dblclick(function() {
+      this.queueA.dequeue(this.model.clone());
     }.bind(this));
     //create a cell in our row that we can append our button to
     var tdA = $('<td>');
@@ -323,9 +361,15 @@ var QueueSongView = Backbone.View.extend({
     this.render();
   },
 
-  //render the view and append the song title to the row
+    //render the view and append the song title to the row
   render: function() {
     return this.$el.append('<td>' + this.model.get('title') + '</td>');
+  },
+
+  events: {
+    'click': function(){
+      this.model.dequeue();
+    }
   }
 });
 
@@ -367,8 +411,16 @@ var PlayerView = Backbone.View.extend({
   // NOTE: this is triggered by the html 5 player and is being listened for by our
   initialize: function(container) {
     this.$el.on('ended', function() {
-      this.model.ended(); // Will call the ended function on a SongModel
+      this.model.ended(this.$el); // Will call the ended function on a SongModel
       this.trigger('ended', this.model);
+    }.bind(this));
+
+    this.$el.on('play', function(){
+      this.model.play(this.$el);  
+    }.bind(this));
+
+    this.$el.on('pause', function(){
+      this.model.pause(this.$el);
     }.bind(this));
 
     //clear song out of player
@@ -398,12 +450,8 @@ var PlayerView = Backbone.View.extend({
   play: function(){
     if(this.el.paused){
       this.el.play();
-      this.$el.parent().find('.arm').removeClass('armpause');
-      this.$el.parent().find('.arm').addClass('armplay');
     } else {
       this.el.pause();
-      this.$el.parent().find('.arm').removeClass('armplay');
-      this.$el.parent().find('.arm').addClass('armpause');
     }
   },
 
@@ -491,7 +539,7 @@ var SetStartButtonView = Backbone.View.extend({
     container.append(this.$el);
   }
 
-})
+});
 
 
 
