@@ -10,6 +10,7 @@ var AppModel = Backbone.Model.extend({
     //instatiating both queue collections. 'queueA' and 'queueB' will both be an array of objects
     var queueA = new QueueCollection([]);
     var queueB = new QueueCollection([]);
+    console.log('Loggin queue A: ', queueA);
 
     //setting a queue attribute that will have events: add, playsong, and remove
     this.set('queueA', queueA);
@@ -59,9 +60,15 @@ var SongModel = Backbone.Model.extend({
     this.trigger('playsong', this);
   },
 
+  dequeue: function(){
+    this.trigger('dequeue', this); // Dequeue will be listened to on the QueueCollection
+  },
+
   ended: function(){
     this.trigger('ended', this); // ended event will be listened to the QueueCollection
-  }
+  },
+
+
 });
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -86,7 +93,8 @@ var QueueCollection = Backbone.Collection.extend({
   initialize: function(){
     this.on( 'dequeue', this.dequeue, this );
     this.on( 'ended', this.playNext, this );
-    this.on( 'click', this.dequeue, this);
+    this.on( 'remove', this.dequeue, this);
+    
     // this.dequeueTest();
   },
 
@@ -101,25 +109,17 @@ var QueueCollection = Backbone.Collection.extend({
     }
   },
 
-  dequeueTest: function(){
-    
-    console.log('Logging this on 106', this);
-  },
-
-  //define dequeue method, which will be fired from 'AppModel'
-  dequeue: function() {
+   //define dequeue method, which will be fired from 'AppModel'
+  dequeue: function(song) {
     //remove the song
-    this.on('click', function(){
-      console.log('Some shit from line 113');
-    })
+    
     console.log('in dequeue');
-    this.shift();
-    if (this.length >= 1) {
+    console.log('logging this model: ', song);
+    if (this.at(0) === song) {
       console.log('inside if statement');
-      // this.trigger('playsong', this.at(0));
-      this.at(0).play();
-    } else {
-      this.trigger('playsong');
+      this.playNext();
+    } else {      
+      this.remove(song);
     }
 
   },
@@ -137,6 +137,11 @@ var QueueCollection = Backbone.Collection.extend({
     this.at(0).play();
   },
 
+  events: {
+    'click': function() {
+      this.model.dequeue();
+    }
+  }
 
 });
 
@@ -342,7 +347,7 @@ var QueueSongView = Backbone.View.extend({
   initialize: function(model) {
     this.model = model;
     this.render();
-    this.testing(this.$el);
+    // this.testing(this.$el);
   },
 
   // testing: function(model){
@@ -350,15 +355,25 @@ var QueueSongView = Backbone.View.extend({
   //     console.log('testing 123', some);
   //   });
   // },
-  testing: function(thing){
-    thing.on('click', function(){
-      // console.log('Logging this thing', thing, 'Loggin this only', this);
-    
-    });
-  },
+  // testing: function(thing){
+  //   thing.on('click', function(){
+  //     // console.log('Logging this thing', thing, '\nLogging this only', this);
+  //     // Get the position where this is in the queue collection
+  //       // Splice that element from the collection.
+  //       // Update current songs and whatnot        
+  //       // thing.detach();
+  //   });
+  // },
+
   //render the view and append the song title to the row
   render: function() {
     return this.$el.append('<td>' + this.model.get('title') + '</td>');
+  },
+
+  events: {
+    'click': function(){
+      this.model.dequeue();
+    }
   }
 });
 
