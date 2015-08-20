@@ -88,11 +88,11 @@ describe('Instances', function() {
 
   describe('View Instances Exist', function() {
 
-    it('should have instance "libraryView"', function() {
+    xit('should have instance "libraryView"', function() {
       expect(libraryView).to.be.an('object');
     });
 
-    it('"libraryView" should be an instance of "LibraryCollectionView"', function() {
+    xit('"libraryView" should be an instance of "LibraryCollectionView"', function() {
       expect(libraryView).to.be.instanceOf(LibraryCollectionView);
     });
 
