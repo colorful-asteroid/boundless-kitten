@@ -481,7 +481,7 @@ var SpeedView = Backbone.View.extend({
 });
 
 var TableView = Backbone.View.extend({
-  el: '<div><img class="record" src="assets/record.png"></img><img class="arm armpause" src="http://donutsfordilla.com/images/djarm.png"/></div>',
+  el: '<div class="turntable"><img class="record" src="assets/record.png"></img><img class="arm armpause" src="assets/djarm.png"/></div>',
   initialize: function(container){
     container.prepend(this.$el);
   }
