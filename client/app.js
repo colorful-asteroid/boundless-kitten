@@ -11,14 +11,6 @@ var AppModel = Backbone.Model.extend({
     var queueA = new QueueCollection([]);
     var queueB = new QueueCollection([]);
 
-    //binding a callback to both queues that will set the current song. it will be invoked when the 'playsong' event is fired from 'QueueCollection'
-    queueA.on('playsong', function(song) {
-      this.set('currentSongA', song);
-    }, this);
-    queueB.on('playsong', function(song) {
-      this.set('currentSongB', song);
-    }, this);
-
     //setting a queue attribute that will have events: add, playsong, and remove
     this.set('queueA', queueA);
     this.set('queueB', queueB);
@@ -26,6 +18,22 @@ var AppModel = Backbone.Model.extend({
     //setting a current song attribute
     this.set('currentSongA', new SongModel());
     this.set('currentSongB', new SongModel());
+
+    
+
+    this.get('queueA').on('playsong', function(song){
+      console.log('inside queueA function');
+      this.set('currentSongA', song);
+      console.log(this.get('currentSongA'));
+    }, this);
+    
+    //binding a callback to both queues that will set the current song. it will be invoked when the 'playsong' event is fired from 'QueueCollection'
+    queueA.on('playsong', function(song) {
+      this.set('currentSongA', song);
+    }, this);
+    queueB.on('playsong', function(song) {
+      this.set('currentSongB', song);
+    }, this);
   },
 
   //dequeue methods for each queue
@@ -44,10 +52,10 @@ var SongModel = Backbone.Model.extend({
   // It triggers an 'ended' event that is listened to by its collection, QueueCollection
   play: function(){
     // Triggering an event here will also trigger the event on the collection
-    this.trigger('play', this);
+    this.trigger('playsong', this);
   },
   ended: function(){
-    this.trigger('ended', this);
+    this.trigger('ended', this); // ended event will be listened to the QueueCollection
   }
 });
 
@@ -99,15 +107,9 @@ var QueueCollection = Backbone.Collection.extend({
       this.trigger('playsong');
     }
 
-    //  if( this.at(0) === song ){
-    //   this.playNext();
-    // } else {
-    //   this.remove(song);
-    // }
   },
 
   playNext: function(){
-    console.log('in playNext');
     this.shift();
     if( this.length >= 1 ){
       this.playFirst();
@@ -162,13 +164,13 @@ var AppView = Backbone.View.extend({
     }, this);
 
     //when song ends, the callback function will be invoked and the ended song will be removed. 'dequeueA/B' is defined in 'AppModel'
-    this.playerViewA.on('ended', function() {
-      this.model.dequeueA();
-      this.model.play
-    }, this);
-    this.playerViewB.on('ended', function() {
-      this.model.dequeueB();
-    }, this);
+    // this.playerViewA.on('ended', function() {
+    //   console.log('this is**********************: ', this);
+    //   this.model.dequeueA();
+    // }, this);
+    // this.playerViewB.on('ended', function() {
+    //   this.model.dequeueB();
+    // }, this);
 
     //'sliderView' is instantiated in 'AppModel', the callback responds to the 'x-fade' event when the user moves the crossfader
     //the volume control on both audio players are linked together and will respond to crossfader movement
@@ -219,7 +221,7 @@ var AppView = Backbone.View.extend({
       this.startA = this.playerViewA.setCurrentTime(function(time){return time;});
 
      // this.startA = 30;
-    }, this);
+   }, this);
   }
 });
 
@@ -352,12 +354,13 @@ var QueueCollectionView = Backbone.View.extend({
 //create a view class for our turntables, which is instantiated in 'AppView'
 var PlayerView = Backbone.View.extend({
   //create a new audio element with controls
-  el: '<audio controls preload auto />',
+  el: '<audio controls preload autoplay/>',
 
   //callback is invoked when 'ended' is fired (when song is done playing)
   // NOTE: this is triggered by the html 5 player and is being listened for by our
   initialize: function(container) {
     this.$el.on('ended', function() {
+      this.model.ended(); // Will call the ended function on a SongModel
       this.trigger('ended', this.model);
     }.bind(this));
 
