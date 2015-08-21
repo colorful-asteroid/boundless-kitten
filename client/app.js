@@ -404,6 +404,11 @@ var QueueCollectionView = Backbone.View.extend({
 
 //create a view class for our turntables, which is instantiated in 'AppView'
 var PlayerView = Backbone.View.extend({
+  getPlayer: function(player){
+    player = player.offsetParent().attr('class');
+    return '.'+player.match(/\w+/)[0];
+  },
+  
   //create a new audio element with controls
   el: '<audio controls preload autoplay/>',
 
@@ -411,17 +416,27 @@ var PlayerView = Backbone.View.extend({
   // NOTE: this is triggered by the html 5 player and is being listened for by our
   initialize: function(container) {
     this.$el.on('ended', (function () { 
-      console.log('ended called on player!!!!!!!!!!!!!!!!!!');
       this.model.ended(this.$el);
+      var p = this.getPlayer(this.$el);
+      $('.arm', p).removeClass('armplay');
+      $('.arm', p).addClass('armpause');
+      $('.record', p).removeClass('spinning');
     }).bind(this));
 
     this.$el.on('play', function(){
-      this.model.play(this.$el);  
+      this.model.play(this.$el);
+      var p = this.getPlayer(this.$el);
+      $('.arm', p).removeClass('armpause');
+      $('.arm', p).addClass('armplay');
+      $('.record', p).addClass('spinning');
     }.bind(this));
 
-    // this.$el.on('pause', function(){
-    //   this.model.pause(this.$el);
-    // }.bind(this));
+    this.$el.on('pause', function(){
+      var p = this.getPlayer(this.$el);
+      $('.arm', p).removeClass('armplay');
+      $('.arm', p).addClass('armpause');
+      $('.record', p).removeClass('spinning');
+    }.bind(this));
 
     //clear song out of player
     container.append(this.$el);
