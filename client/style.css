@@ -100,13 +100,15 @@ body {
 
 .deckButton {
   background-color: #222;
-  box-shadow: 2px 2px 4px black;
+  box-shadow: 0 4px 0 black;
   line-height: 50px;
   height: 50px;
   width: 50px;
   margin: 5px;
+  border-radius: 3px;
   float: left;
   cursor: pointer;
+  transition: all .1s linear;
 }
 
 .deckButton:hover {
@@ -114,8 +116,9 @@ body {
 }
 
 .deckButton:active {
-  box-shadow: 0;
-  background-color: #888;
+  box-shadow: 0 2px 0 black;
+  transform: translateY(3px);
+
 }
 
 .turntable {
