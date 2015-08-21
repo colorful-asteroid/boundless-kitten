@@ -432,6 +432,7 @@ var PlayerView = Backbone.View.extend({
       $('.arm', p).removeClass('armplay');
       $('.arm', p).addClass('armpause');
       $('.record', p).removeClass('spinning');
+      $('.record', p).removeClass('spinstart');
     }).bind(this));
 
     this.$el.on('play', function(){
@@ -439,6 +440,7 @@ var PlayerView = Backbone.View.extend({
       var p = this.getPlayer(this.$el);
       $('.arm', p).removeClass('armpause');
       $('.arm', p).addClass('armplay');
+      $('.record', p).addClass('spinstart');
       $('.record', p).addClass('spinning');
     }.bind(this));
 
@@ -446,6 +448,7 @@ var PlayerView = Backbone.View.extend({
       var p = this.getPlayer(this.$el);
       $('.arm', p).removeClass('armplay');
       $('.arm', p).addClass('armpause');
+      $('.record', p).addClass('spinstart');
       $('.record', p).removeClass('spinning');
     }.bind(this));
 
@@ -641,6 +644,15 @@ $(document).ready(function() {
       autoplay: 'autoplay'
     });
   });
+  console.log('document is ready');
+  $('.record').on(
+    "transitionend MSTransitionEnd webkitTransitionEnd oTransitionEnd",
+    function(){
+      console.log('transitionend');
+      $(this).removeClass("spinstart");
+    }
+  );
+
 
   ////////////////////////////////////////////////////////////////////////////////
   //                                                           MODEL INSTANCES  //
