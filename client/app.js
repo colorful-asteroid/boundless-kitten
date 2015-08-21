@@ -4,9 +4,16 @@
 //                                                                    MODELS  //
 ////////////////////////////////////////////////////////////////////////////////
 
+var getPlayer =  function(player){
+  player = player.offsetParent().attr('class');
+  return '.'+player.match(/\w+/)[0];
+};
+
+
+
 //defining model for the entire app
 var AppModel = Backbone.Model.extend({
-  initialize: function() {
+   initialize: function() {
     //instatiating both queue collections. 'queueA' and 'queueB' will both be an array of objects
     var queueA = new QueueCollection([]);
     var queueB = new QueueCollection([]);
@@ -52,27 +59,9 @@ var AppModel = Backbone.Model.extend({
 
 //defining a model for a song
 var SongModel = Backbone.Model.extend({
-  // getPlayer: function(player){
-  //   player = player.offsetParent().attr('class');
-  //   if(player === 'playerLeft col-md-5'){
-  //     return '.playerLeft';
-  //   } else {
-  //     return '.playerRight';
-  //   }
-  // },
-
-  // pause: function(player){
-  //   player = this.getPlayer(player);
-  //   $('.arm', player).removeClass('armplay');
-  //   $('.arm', player).addClass('armpause');
-  // },
-  
   // This function is called from the html5 player in playerView
   // It triggers an 'ended' event that is listened to by its collection, QueueCollection
   play: function(player){
-    // player = this.getPlayer(player);
-    // $('.arm', player).removeClass('armpause');
-    // $('.arm', player).addClass('armplay');
     // Triggering an event here will also trigger the event on the collection
     this.trigger('playsong', this);
   },
@@ -178,15 +167,20 @@ var AppView = Backbone.View.extend({
     
     //deckA
     this.deckA = new DeckView($('.playerLeft'));
-    this.playA = new PlayButtonView($('.playerLeft').find('.deck'));
     this.startPointA = new StartButtonView($('.deck', '.playerLeft'));
     this.setStartA = new SetStartButtonView($('.deck', '.playerLeft'));
+    this.skipBackA = new SkipBackButtonView($('.deck', '.playerLeft'));
+    this.playA = new PlayButtonView($('.playerLeft').find('.deck'));
+    this.skipForA = new SkipForButtonView($('.deck', '.playerLeft'));
 
     //deckB
     this.deckB = new DeckView($('.playerRight'));
-    this.playB = new PlayButtonView($('.deck', '.playerRight'));
     this.startPointB = new StartButtonView($('.deck', '.playerRight'));
     this.setStartB = new SetStartButtonView($('.deck', '.playerRight'));
+    this.skipBackB = new SkipBackButtonView($('.deck', '.playerRight'));
+    this.playB = new PlayButtonView($('.deck', '.playerRight'));
+    this.skipForB = new SkipForButtonView($('.deck', '.playerRight'));
+
 
     //listening for a change to our current song in the corresponding turntable, callback will be invoked when the change event is fired
     //'setSong' is defined in 'PlayerView'
@@ -262,6 +256,23 @@ var AppView = Backbone.View.extend({
     this.setStartB.on('setStartPointB', function(){
       this.startB = this.playerViewB.setCurrentTime(function(time){return time;});
     }, this);
+
+    this.skipForA.on('skipFor.playerLeft', function(){
+      this.playerViewA.currentTime(this.playerViewA.getEndTime(function(time){return time;}));
+    }, this);
+
+    this.skipBackA.on('skipBack.playerLeft', function(){
+      this.playerViewA.currentTime(0);
+    }, this);
+
+    this.skipForB.on('skipFor.playerRight', function(){
+      this.playerViewB.currentTime(this.playerViewB.getEndTime(function(time){return time;}));
+    }, this);
+
+    this.skipBackB.on('skipBack.playerRight', function(){
+      this.playerViewB.currentTime(0);
+    }, this);
+
   }
 });
 
@@ -478,6 +489,10 @@ var PlayerView = Backbone.View.extend({
     return callback(this.el.currentTime);
   },
 
+  getEndTime: function(callback){
+    return callback(this.el.duration);
+  },
+
   //render the view for the player and get the song from the server
   render: function() {
     return this.$el.attr('src', this.model ? 'https://trntbl3000.herokuapp.com/' + this.model.get('filename') : '');
@@ -556,7 +571,31 @@ var SetStartButtonView = Backbone.View.extend({
 
 });
 
+var SkipForButtonView = Backbone.View.extend({
+  el: '<div id="skipFor" class="deckButton">▶▶▌</div>',
+  initialize: function(container){
+    this.render(container);
+    this.$el.on('click', function(){
+      this.trigger('skipFor'+getPlayer(this.$el));
+    }.bind(this));
+  },
+  render: function(container){
+    container.append(this.$el);
+  }
+});
 
+var SkipBackButtonView = Backbone.View.extend({
+  el: '<div id="skipBack" class="deckButton">▌◀◀</div>',
+  initialize: function(container){
+    this.render(container);
+    this.$el.on('click', function(){
+      this.trigger('skipBack'+getPlayer(this.$el));
+    }.bind(this));
+  },
+  render: function(container){
+    container.append(this.$el);
+  }
+});
 
 //define a view class for our crossfader which is instantiated in 'AppView'
 var SliderView = Backbone.View.extend({
