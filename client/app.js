@@ -364,12 +364,10 @@ var QueueSongView = Backbone.View.extend({
   initialize: function(model) {
     this.model = model;
     this.render();
-    // $('.queueSong').hover(
-    //   function(){ 
-    //     console.log('inside hover class');
-    //     $(this).find('.delete_img').addClass('delete_hover') },
-    //   function(){ $(this).find('.delete_img').removeClass('delete_hover') }
-    //   );
+    $('.queueSong').hover(
+      function(){ $(this).find('.delete_img').addClass('delete_hover') },
+      function(){ $(this).find('.delete_img').removeClass('delete_hover') }
+      );
 },
 
     //render the view and append the song title to the row
@@ -381,10 +379,6 @@ var QueueSongView = Backbone.View.extend({
     events: {
       'click': function(){
         this.model.dequeue();
-      }, 
-      'hover': function() {
-        console.log('inside hover class');
-        $(this).find('.delete_img').addClass('delete_hover');
       }
     }
   });

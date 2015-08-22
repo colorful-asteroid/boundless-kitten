@@ -39,10 +39,6 @@ body {
   color: #ddd;
 }
 
-audio {
-  visibility: hidden;
-}
-
 #slider {
   margin-top: 80px;
 }
