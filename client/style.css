@@ -39,12 +39,42 @@ body {
   color: #ddd;
 }
 
+input[type=range] {
+  -webkit-appearance: none;
+  width: 100%;
+  margin: 15.8px 0;
+  padding: 3px;
+  background-color: black;
+  border-color: red;
+  box-shadow: inset 1px 1px 12px 5px rgba(119,119,119,1), 0px 0px 20px #0d0d0d;
+}
+
+input[type=range]::-webkit-slider-thumb {
+  border: 7px solid rgba(85,85,85,1);
+  box-shadow: inset 0.5px 0.2px 7px rgba(119,119,119,1), 0px 0px 5px #000000;
+  height: 40px;
+  width: 20px;
+  border-radius: 3px;
+  background: #000000;
+  cursor: pointer;
+  -webkit-appearance: none;
+  margin-top: -15px;
+  margin-bottom: -10px;  
+}
+
+input:focus {
+  outline: none;
+  box-shadow: inset 0.5px 0.2px 15px 2px rgba(205,0,0,1), 0px 0px 50px rgba(205,0,0,1);
+}
+
 #slider {
   margin-top: 80px;
+ 
 }
 
 #speedSlider {
   width: 300px;
+  
 }
 
 .timesig {
@@ -85,7 +115,7 @@ body {
 
 .deck {
   background-color: #777;
-  width: 320px;
+  width: 350px;
   padding: 10px;
   margin: 10px;
   height: 80px;
@@ -93,15 +123,13 @@ body {
 
 .deckButton {
   background-color: #222;
-  box-shadow: 0 4px 0 black;
+  box-shadow: 2px 2px 4px black;
   line-height: 50px;
   height: 50px;
   width: 50px;
   margin: 5px;
-  border-radius: 3px;
   float: left;
   cursor: pointer;
-  transition: all .1s linear;
 }
 
 .deckButton:hover {
@@ -109,9 +137,8 @@ body {
 }
 
 .deckButton:active {
-  box-shadow: 0 2px 0 black;
-  transform: translateY(3px);
-
+  box-shadow: 0;
+  background-color: #888;
 }
 
 .turntable {
