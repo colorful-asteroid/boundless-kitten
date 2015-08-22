@@ -13,11 +13,10 @@ var getPlayer =  function(player){
 
 //defining model for the entire app
 var AppModel = Backbone.Model.extend({
-   initialize: function() {
+ initialize: function() {
     //instatiating both queue collections. 'queueA' and 'queueB' will both be an array of objects
     var queueA = new QueueCollection([]);
     var queueB = new QueueCollection([]);
-    console.log('Loggin queue A: ', queueA);
 
     //setting a queue attribute that will have events: add, playsong, and remove
     this.set('queueA', queueA);
@@ -28,8 +27,8 @@ var AppModel = Backbone.Model.extend({
     this.set('currentSongB', new SongModel());
 
     this.get('queueA').on('playsong', function(song){
-       this.set('currentSongA', song);
-    }, this);
+     this.set('currentSongA', song);
+   }, this);
 
     this.get('queueB').on('playsong', function(song){
       this.set('currentSongB', song);
@@ -48,13 +47,6 @@ var AppModel = Backbone.Model.extend({
 
   },
 
-  //dequeue methods for each queue
-  dequeueA: function() {
-    this.get('queueA').dequeue();
-  },
-  dequeueB: function() {
-    this.get('queueB').dequeue();
-  }
 });
 
 //defining a model for a song
@@ -72,10 +64,10 @@ var SongModel = Backbone.Model.extend({
   ended: function(){
      // this.pause(player);
      this.trigger('ended', this); // ended event will be listened to the QueueCollection
-  },
+   },
 
 
-});
+ });
 
 ////////////////////////////////////////////////////////////////////////////////
 //                                                               COLLECTIONS  //
@@ -116,7 +108,7 @@ var QueueCollection = Backbone.Collection.extend({
   },
 
    //define dequeue method, which will be fired from 'AppModel'
-  dequeue: function(song) {
+   dequeue: function(song) {
     //remove the song
     if (this.at(0) === song) {
       this.playNext();
@@ -295,7 +287,7 @@ var LibrarySongView = Backbone.View.extend({
     //create a button that, when clicked, will send a song to queueA
     var queueBtnA = $('<input type="button" class="btn btn-default btn-xs" value="QueueA"></input>');
     queueBtnA.click(function() {
-      
+
       this.queueA.enqueue(this.model.clone());
     }.bind(this));
 
@@ -366,23 +358,30 @@ var QueueSongView = Backbone.View.extend({
   //create a new row for each song
   tagName: 'tr',
 
+  className: 'queueSong',
+
   //passing in a song that will appended in the render method
   initialize: function(model) {
     this.model = model;
     this.render();
-  },
+    $('.queueSong').hover(
+      function(){ $(this).find('.delete_img').addClass('delete_hover') },
+      function(){ $(this).find('.delete_img').removeClass('delete_hover') }
+      );
+},
 
     //render the view and append the song title to the row
-  render: function() {
-    return this.$el.append('<td>' + this.model.get('title') + '</td>');
-  },
+    render: function() {
+      var textToAppend = '<td>' + this.model.get('title') + '</td>'+'<td><img class="delete_img" src="assets/trash_can_red.png"></img></td>';
+      return this.$el.append(textToAppend);
+    },
 
-  events: {
-    'click': function(){
-      this.model.dequeue();
+    events: {
+      'click': function(){
+        this.model.dequeue();
+      }
     }
-  }
-});
+  });
 
 //define the view class for the entire queue of songs
 var QueueCollectionView = Backbone.View.extend({
@@ -426,46 +425,47 @@ var PlayerView = Backbone.View.extend({
   //callback is invoked when 'ended' is fired (when song is done playing)
   // NOTE: this is triggered by the html 5 player and is being listened for by our
   initialize: function(container) {
-    var armCssRev = {
-        '-webkit-animation': 'beat 1s ease reverse',
-        '-moz-animation': 'beat 1s ease reverse', 
-        'animation': 'beat 1s ease reverse',
-        'animation-fill-mode': 'forwards',
-        'transform-origin': '80% 16.5%'
-      };
+    var spinStart = {
+      '-webkit-animation':'spin 3s ease-in',
+      '-moz-animation':'spin 3s ease-in',
+      'animation':'spin 3s ease-in',
+    }; 
 
-    var armCssPlay = {
-        '-webkit-animation': 'beat 1s ease',
-        '-moz-animation': 'beat 1s ease', 
-        'animation': 'beat 1s ease',
-        'animation-fill-mode': 'forwards',
-        'transform-origin': '80% 16.5%'
-      };
+    var spinning = {
+      '-webkit-animation':'spin 2s linear infinite',
+      '-moz-animation':'spin 2s linear infinite',
+      'animation':'spin 2s linear infinite',
+    };
 
     this.$el.on('ended', (function () { 
       this.model.ended(this.$el);
       var p = this.getPlayer(this.$el);
-      $('.arm', p).css({});
-      $('.arm', p).css(armCssRev);
+      $('.arm', p).removeClass('armplay');
+      $('.arm', p).addClass('armpause');
       $('.record', p).removeClass('spinning');
-      $('.record', p).removeClass('spinstart');
+      $('.record', p).removeAttr('style');
     }).bind(this));
 
     this.$el.on('play', function(){
       this.model.play(this.$el);
       var p = this.getPlayer(this.$el);
-      $('.arm', p).css({});
-      $('.arm', p).css(armCssPlay);
-      $('.record', p).addClass('spinstart');
-      $('.record', p).addClass('spinning');
+      $('.arm', p).removeClass('armpause');
+      $('.arm', p).addClass('armplay');
+      $('.record', p).css(spinStart);
+      setTimeout(function(){
+        if($('.record', p).attr('style')){
+          $('.record', p).addClass('spinning');
+          $('.record', p).css(spinning);
+        }      
+      }, 3000);
     }.bind(this));
 
     this.$el.on('pause', function(){
       var p = this.getPlayer(this.$el);
-      $('.arm', p).css({});
-      $('.arm', p).css(armCssRev);
-      $('.record', p).addClass('spinstart');
+      $('.arm', p).removeClass('armplay');
+      $('.arm', p).addClass('armpause');
       $('.record', p).removeClass('spinning');
+      $('.record', p).removeAttr('style');
     }.bind(this));
 
     //clear song out of player
@@ -660,15 +660,6 @@ $(document).ready(function() {
       autoplay: 'autoplay'
     });
   });
-  console.log('document is ready');
-  $('.record').on(
-    "transitionend MSTransitionEnd webkitTransitionEnd oTransitionEnd",
-    function(){
-      console.log('transitionend');
-      $(this).removeClass("spinstart");
-    }
-  );
-
 
   ////////////////////////////////////////////////////////////////////////////////
   //                                                           MODEL INSTANCES  //
