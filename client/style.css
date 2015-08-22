@@ -39,6 +39,10 @@ body {
   color: #ddd;
 }
 
+audio {
+  visibility: hidden;
+}
+
 #slider {
   margin-top: 80px;
 }
@@ -57,20 +61,6 @@ body {
   height: 200px;
 }
 
-
-.sipinning {
-  -webkit-animation-delay: 3s;
-  -webkit-animation:spin 2s linear infinite;
-  -moz-animation:spin 2s linear infinite;
-  animation:spin 2s linear infinite;
-  animation-fill-mode: forward;
-}
-
-.spinstart {
-  -webkit-animation:spin 3s ease-in;
-  animation: spin 3s ease-in;
-}
-
 .pad {
   background-image: url('assets/logo.png');
   background-size:cover;
@@ -85,13 +75,13 @@ body {
   height:150px;
 }
 
-.xarmplay {
+.armplay {
   -webkit-animation: beat 1s ease;
   animation-fill-mode: forwards;
   transform-origin: 80% 16.5%;
 }
 
-.xarmpause {
+.armpause {
   -webkit-animation: beat 1s ease reverse;
   animation-fill-mode: forwards;
   transform-origin: 80% 16.5%;
