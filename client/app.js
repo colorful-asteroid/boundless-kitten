@@ -4,9 +4,16 @@
 //                                                                    MODELS  //
 ////////////////////////////////////////////////////////////////////////////////
 
+var getPlayer =  function(player){
+  player = player.offsetParent().attr('class');
+  return '.'+player.match(/\w+/)[0];
+};
+
+
+
 //defining model for the entire app
 var AppModel = Backbone.Model.extend({
-  initialize: function() {
+   initialize: function() {
     //instatiating both queue collections. 'queueA' and 'queueB' will both be an array of objects
     var queueA = new QueueCollection([]);
     var queueB = new QueueCollection([]);
@@ -51,28 +58,9 @@ var AppModel = Backbone.Model.extend({
 
 //defining a model for a song
 var SongModel = Backbone.Model.extend({
-  // getPlayer: function(player){
-  //   player = player.offsetParent().attr('class');
-  //   if(player === 'playerLeft col-md-5'){
-  //     return '.playerLeft';
-  //   } else {
-  //     return '.playerRight';
-  //   }
-  // },
-
-  // pause: function(player){
-  //   player = this.getPlayer(player);
-  //   $('.arm', player).removeClass('armplay');
-  //   $('.arm', player).addClass('armpause');
-  // },
-
   // This function is called from the html5 player in playerView
   // It triggers an 'ended' event that is listened to by its collection, QueueCollection
   play: function(player){
-    // player = this.getPlayer(player);
-    // $('.arm', player).removeClass('armpause');
-    // $('.arm', player).addClass('armplay');
-
     // Triggering an event here will also trigger the event on the collection
     this.trigger('playsong', this);
   },
@@ -139,7 +127,6 @@ var QueueCollection = Backbone.Collection.extend({
 
   playNext: function(){
     this.shift();
-    console.log()
     if( this.length >= 1 ){
       this.playFirst();
     } else {
@@ -156,7 +143,6 @@ var QueueCollection = Backbone.Collection.extend({
       this.model.dequeue();
     }
   }
-
 });
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -180,15 +166,20 @@ var AppView = Backbone.View.extend({
     
     //deckA
     this.deckA = new DeckView($('.playerLeft'));
-    this.playA = new PlayButtonView($('.playerLeft').find('.deck'));
     this.startPointA = new StartButtonView($('.deck', '.playerLeft'));
     this.setStartA = new SetStartButtonView($('.deck', '.playerLeft'));
+    this.skipBackA = new SkipBackButtonView($('.deck', '.playerLeft'));
+    this.playA = new PlayButtonView($('.playerLeft').find('.deck'));
+    this.skipForA = new SkipForButtonView($('.deck', '.playerLeft'));
 
     //deckB
     this.deckB = new DeckView($('.playerRight'));
-    this.playB = new PlayButtonView($('.deck', '.playerRight'));
     this.startPointB = new StartButtonView($('.deck', '.playerRight'));
     this.setStartB = new SetStartButtonView($('.deck', '.playerRight'));
+    this.skipBackB = new SkipBackButtonView($('.deck', '.playerRight'));
+    this.playB = new PlayButtonView($('.deck', '.playerRight'));
+    this.skipForB = new SkipForButtonView($('.deck', '.playerRight'));
+
 
     //listening for a change to our current song in the corresponding turntable, callback will be invoked when the change event is fired
     //'setSong' is defined in 'PlayerView'
@@ -222,7 +213,7 @@ var AppView = Backbone.View.extend({
       this.playerViewA.playbackRate(value);
       var speed = 2/value;
       $('.playerLeft').find('.timesig').text(value + 'x');
-      $('.playerLeft').find('.record').css({
+      $('.playerLeft').find('.spinning').css({
         '-webkit-animation': 'spin ' + speed + 's linear infinite',
         '-moz-animation': 'spin ' + speed + 's linear infinite', 
         'animation': 'spin ' + speed + 's linear infinite'
@@ -233,7 +224,7 @@ var AppView = Backbone.View.extend({
       value = parseFloat(value).toFixed(2);
       $('.playerRight').find('.timesig').text(value + 'x');
       var speed = 2/value;
-      $('.playerRight').find('.record').css({
+      $('.playerRight').find('.spinning').css({
         '-webkit-animation': 'spin ' + speed + 's linear infinite',
         '-moz-animation': 'spin ' + speed + 's linear infinite', 
         'animation': 'spin ' + speed + 's linear infinite'
@@ -264,6 +255,23 @@ var AppView = Backbone.View.extend({
     this.setStartB.on('setStartPointB', function(){
       this.startB = this.playerViewB.setCurrentTime(function(time){return time;});
     }, this);
+
+    this.skipForA.on('skipFor.playerLeft', function(){
+      this.playerViewA.currentTime(this.playerViewA.getEndTime(function(time){return time;}));
+    }, this);
+
+    this.skipBackA.on('skipBack.playerLeft', function(){
+      this.playerViewA.currentTime(0);
+    }, this);
+
+    this.skipForB.on('skipFor.playerRight', function(){
+      this.playerViewB.currentTime(this.playerViewB.getEndTime(function(time){return time;}));
+    }, this);
+
+    this.skipBackB.on('skipBack.playerRight', function(){
+      this.playerViewB.currentTime(0);
+    }, this);
+
   }
 });
 
@@ -406,24 +414,58 @@ var QueueCollectionView = Backbone.View.extend({
 
 //create a view class for our turntables, which is instantiated in 'AppView'
 var PlayerView = Backbone.View.extend({
+  getPlayer: function(player){
+    player = player.offsetParent().attr('class');
+    return '.'+player.match(/\w+/)[0];
+  },
+  
   //create a new audio element with controls
   el: '<audio controls preload autoplay/>',
 
   //callback is invoked when 'ended' is fired (when song is done playing)
   // NOTE: this is triggered by the html 5 player and is being listened for by our
   initialize: function(container) {
+    var armCssRev = {
+        '-webkit-animation': 'beat 1s ease reverse',
+        '-moz-animation': 'beat 1s ease reverse', 
+        'animation': 'beat 1s ease reverse',
+        'animation-fill-mode': 'forwards',
+        'transform-origin': '80% 16.5%'
+      };
+
+    var armCssPlay = {
+        '-webkit-animation': 'beat 1s ease',
+        '-moz-animation': 'beat 1s ease', 
+        'animation': 'beat 1s ease',
+        'animation-fill-mode': 'forwards',
+        'transform-origin': '80% 16.5%'
+      };
+
     this.$el.on('ended', (function () { 
-      console.log('ended called on player!!!!!!!!!!!!!!!!!!');
       this.model.ended(this.$el);
+      var p = this.getPlayer(this.$el);
+      $('.arm', p).css({});
+      $('.arm', p).css(armCssRev);
+      $('.record', p).removeClass('spinning');
+      $('.record', p).removeClass('spinstart');
     }).bind(this));
 
     this.$el.on('play', function(){
-      this.model.play(this.$el);  
+      this.model.play(this.$el);
+      var p = this.getPlayer(this.$el);
+      $('.arm', p).css({});
+      $('.arm', p).css(armCssPlay);
+      $('.record', p).addClass('spinstart');
+      $('.record', p).addClass('spinning');
     }.bind(this));
 
-    // this.$el.on('pause', function(){
-    //   this.model.pause(this.$el);
-    // }.bind(this));
+    this.$el.on('pause', function(){
+      var p = this.getPlayer(this.$el);
+      $('.arm', p).css({});
+      $('.arm', p).css(armCssRev);
+      $('.record', p).addClass('spinstart');
+      $('.record', p).removeClass('spinning');
+    }.bind(this));
 
     //clear song out of player
     container.append(this.$el);
@@ -463,6 +505,10 @@ var PlayerView = Backbone.View.extend({
 
   setCurrentTime: function(callback){
     return callback(this.el.currentTime);
+  },
+
+  getEndTime: function(callback){
+    return callback(this.el.duration);
   },
 
   //render the view for the player and get the song from the server
@@ -543,7 +589,31 @@ var SetStartButtonView = Backbone.View.extend({
 
 });
 
+var SkipForButtonView = Backbone.View.extend({
+  el: '<div id="skipFor" class="deckButton">▶▶▌</div>',
+  initialize: function(container){
+    this.render(container);
+    this.$el.on('click', function(){
+      this.trigger('skipFor'+getPlayer(this.$el));
+    }.bind(this));
+  },
+  render: function(container){
+    container.append(this.$el);
+  }
+});
 
+var SkipBackButtonView = Backbone.View.extend({
+  el: '<div id="skipBack" class="deckButton">▌◀◀</div>',
+  initialize: function(container){
+    this.render(container);
+    this.$el.on('click', function(){
+      this.trigger('skipBack'+getPlayer(this.$el));
+    }.bind(this));
+  },
+  render: function(container){
+    container.append(this.$el);
+  }
+});
 
 //define a view class for our crossfader which is instantiated in 'AppView'
 var SliderView = Backbone.View.extend({
@@ -589,6 +659,15 @@ $(document).ready(function() {
       autoplay: 'autoplay'
     });
   });
+  console.log('document is ready');
+  $('.record').on(
+    "transitionend MSTransitionEnd webkitTransitionEnd oTransitionEnd",
+    function(){
+      console.log('transitionend');
+      $(this).removeClass("spinstart");
+    }
+  );
+
 
   ////////////////////////////////////////////////////////////////////////////////
   //                                                           MODEL INSTANCES  //

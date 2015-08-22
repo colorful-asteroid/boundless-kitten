@@ -54,13 +54,21 @@ body {
 .record {
   position: relative;
   top: 37px;
-  -webkit-animation:spin 2s linear infinite;
-  -moz-animation:spin 2s linear infinite;
-  animation:spin 2s linear infinite;
   height: 200px;
 }
 
-.spinning {
+
+.sipinning {
+  -webkit-animation-delay: 3s;
+  -webkit-animation:spin 2s linear infinite;
+  -moz-animation:spin 2s linear infinite;
+  animation:spin 2s linear infinite;
+  animation-fill-mode: forward;
+}
+
+.spinstart {
+  -webkit-animation:spin 3s ease-in;
+  animation: spin 3s ease-in;
 }
 
 .pad {
@@ -77,13 +85,13 @@ body {
   height:150px;
 }
 
-.armplay {
+.xarmplay {
   -webkit-animation: beat 1s ease;
   animation-fill-mode: forwards;
   transform-origin: 80% 16.5%;
 }
 
-.armpause {
+.xarmpause {
   -webkit-animation: beat 1s ease reverse;
   animation-fill-mode: forwards;
   transform-origin: 80% 16.5%;
@@ -91,7 +99,7 @@ body {
 
 .deck {
   background-color: #777;
-  width: 350px;
+  width: 320px;
   padding: 10px;
   margin: 10px;
   height: 80px;
@@ -99,13 +107,15 @@ body {
 
 .deckButton {
   background-color: #222;
-  box-shadow: 2px 2px 4px black;
+  box-shadow: 0 4px 0 black;
   line-height: 50px;
   height: 50px;
   width: 50px;
   margin: 5px;
+  border-radius: 3px;
   float: left;
   cursor: pointer;
+  transition: all .1s linear;
 }
 
 .deckButton:hover {
@@ -113,8 +123,9 @@ body {
 }
 
 .deckButton:active {
-  box-shadow: 0;
-  background-color: #888;
+  box-shadow: 0 2px 0 black;
+  transform: translateY(3px);
+
 }
 
 .turntable {
