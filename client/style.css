@@ -57,11 +57,18 @@ body {
   height: 200px;
 }
 
-.spinning {
+
+.sipinning {
+  -webkit-animation-delay: 3s;
   -webkit-animation:spin 2s linear infinite;
   -moz-animation:spin 2s linear infinite;
   animation:spin 2s linear infinite;
   animation-fill-mode: forward;
+}
+
+.spinstart {
+  -webkit-animation:spin 3s ease-in;
+  animation: spin 3s ease-in;
 }
 
 .pad {
@@ -78,13 +85,13 @@ body {
   height:150px;
 }
 
-.armplay {
+.xarmplay {
   -webkit-animation: beat 1s ease;
   animation-fill-mode: forwards;
   transform-origin: 80% 16.5%;
 }
 
-.armpause {
+.xarmpause {
   -webkit-animation: beat 1s ease reverse;
   animation-fill-mode: forwards;
   transform-origin: 80% 16.5%;

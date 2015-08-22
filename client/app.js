@@ -426,26 +426,45 @@ var PlayerView = Backbone.View.extend({
   //callback is invoked when 'ended' is fired (when song is done playing)
   // NOTE: this is triggered by the html 5 player and is being listened for by our
   initialize: function(container) {
+    var armCssRev = {
+        '-webkit-animation': 'beat 1s ease reverse',
+        '-moz-animation': 'beat 1s ease reverse', 
+        'animation': 'beat 1s ease reverse',
+        'animation-fill-mode': 'forwards',
+        'transform-origin': '80% 16.5%'
+      };
+
+    var armCssPlay = {
+        '-webkit-animation': 'beat 1s ease',
+        '-moz-animation': 'beat 1s ease', 
+        'animation': 'beat 1s ease',
+        'animation-fill-mode': 'forwards',
+        'transform-origin': '80% 16.5%'
+      };
+
     this.$el.on('ended', (function () { 
       this.model.ended(this.$el);
       var p = this.getPlayer(this.$el);
-      $('.arm', p).removeClass('armplay');
-      $('.arm', p).addClass('armpause');
+      $('.arm', p).css({});
+      $('.arm', p).css(armCssRev);
       $('.record', p).removeClass('spinning');
+      $('.record', p).removeClass('spinstart');
     }).bind(this));
 
     this.$el.on('play', function(){
       this.model.play(this.$el);
       var p = this.getPlayer(this.$el);
-      $('.arm', p).removeClass('armpause');
-      $('.arm', p).addClass('armplay');
+      $('.arm', p).css({});
+      $('.arm', p).css(armCssPlay);
+      $('.record', p).addClass('spinstart');
       $('.record', p).addClass('spinning');
     }.bind(this));
 
     this.$el.on('pause', function(){
       var p = this.getPlayer(this.$el);
-      $('.arm', p).removeClass('armplay');
-      $('.arm', p).addClass('armpause');
+      $('.arm', p).css({});
+      $('.arm', p).css(armCssRev);
+      $('.record', p).addClass('spinstart');
       $('.record', p).removeClass('spinning');
     }.bind(this));
 
@@ -641,6 +660,15 @@ $(document).ready(function() {
       autoplay: 'autoplay'
     });
   });
+  console.log('document is ready');
+  $('.record').on(
+    "transitionend MSTransitionEnd webkitTransitionEnd oTransitionEnd",
+    function(){
+      console.log('transitionend');
+      $(this).removeClass("spinstart");
+    }
+  );
+
 
   ////////////////////////////////////////////////////////////////////////////////
   //                                                           MODEL INSTANCES  //
