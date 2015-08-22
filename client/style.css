@@ -25,14 +25,14 @@ span {
   text-align: center;
   -o-text-overflow: ellipsis;
   text-overflow: ellipsis;
-  text-shadow: 0 0 10px rgb(255, 255, 255), 0 0 20px rgb(255, 255, 255), 0 0 30px rgb(255, 255, 255), 0 0 40px rgb(255, 17, 119), 0 0 70px rgb(255, 17, 119), 0 0 80px rgb(255, 17, 119), 0 0 100px rgb(255, 17, 119), 0 0 150px rgb(255, 17, 119);
+  text-shadow: 0 0 10px rgb(255, 255, 255), 0 0 20px rgb(255, 255, 255), 0 0 30px rgb(255, 255, 255), 0 0 40px rgb(197, 0, 0), 0 0 70px rgb(197, 0, 0), 0 0 80px rgb(197, 0, 0), 0 0 100px rgb(197, 0, 0), 0 0 150px rgb(197, 0, 0);
   -webkit-transition: all 200ms cubic-bezier(0.42, 0, 0.58, 1) 10ms;
   -moz-transition: all 200ms cubic-bezier(0.42, 0, 0.58, 1) 10ms;
   -o-transition: all 200ms cubic-bezier(0.42, 0, 0.58, 1) 10ms;
   transition: all 200ms cubic-bezier(0.42, 0, 0.58, 1) 10ms;
 }
 .night-hotel:hover {
-  text-shadow: 0 0 5px rgb(255, 255, 255), 0 0 10px rgb(255, 255, 255), 0 0 15px rgb(255, 255, 255), 0 0 20px rgb(255, 17, 119), 0 0 35px rgb(255, 17, 119), 0 0 40px rgb(255, 17, 119), 0 0 50px rgb(255, 17, 119), 0 0 75px rgb(255, 17, 119);
+  text-shadow: 0 0 5px rgb(255, 255, 255), 0 0 10px rgb(255, 255, 255), 0 0 15px rgb(255, 255, 255), 0 0 20px rgb(197, 0, 0), 0 0 35px rgb(197, 0, 0), 0 0 40px rgb(197, 0, 0), 0 0 50px rgb(197, 0, 0), 0 0 75px rgb(197, 0, 0);
 }
 body {
   background-color: #333;
@@ -133,4 +133,33 @@ audio {
 @-webkit-keyframes beat {
     0% { -webkit-transform: rotate(-42deg); }
     100% { -webkit-transform: rotate(-20deg); }   
+}
+
+.queueSong {
+  text-align:center; 
+  text-shadow: 2px 2px 4px #C50000;
+}
+
+.queueSong:hover {
+  height: 40px;
+  font-size: 20px;
+  -webkit-transition: height 0.15s ease-in, display 0.15s step-end;
+}
+/*Controls hover effects on trash can in each queue*/
+.delete_img {
+  height: 20px;
+  -webkit-filter: grayscale(60%);
+}
+
+.delete_img:hover {
+  height: 28px;
+  -webkit-filter: grayscale(0%);
+  -webkit-transition: height 0.2s ease-in, display 0.2s step-end;
+
+}
+
+.delete_hover {
+  height: 28px;
+  -webkit-filter: grayscale(0%);
+  -webkit-transition: height 0.2s ease-in, display 0.2s step-end;
 }
