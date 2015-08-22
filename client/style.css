@@ -39,12 +39,50 @@ body {
   color: #ddd;
 }
 
+input[type=range] {
+  -webkit-appearance: none;
+  width: 100%;
+  margin: 15.8px 0;
+  padding: 3px;
+  background-color: black;
+  border-color: red;
+  box-shadow: inset 1px 1px 12px 5px rgba(119,119,119,1), 0px 0px 1px #0d0d0d;
+/*108,123,139,*/
+}
+
+input[type=range]::-webkit-slider-thumb {
+  /*box-shadow: 1px 3px 5px #000000;*/
+  border: 1px solid #000000;
+  /*border-width: 3px 0 3px 3px;*/
+
+  /*-webkit-box-shadow: inset 1px 1px 1px 1px  rgba(205,0,0,1);
+  -moz-box-shadow: inset 1px 1px 1px 1px  rgba(205,0,0,1);*/
+  box-shadow: inset 0.5px 0.2px 15px 2px rgba(119,119,119,1);
+
+  height: 40px;
+  width: 20px;
+  border-radius: 3px;
+  background: #000000;
+  cursor: pointer;
+  -webkit-appearance: none;
+  margin-top: -15px;
+  margin-bottom: -10px;  
+}
+
+input:focus {
+    outline: none;
+    /*border:1px solid red;*/
+    box-shadow: inset 0.5px 0.2px 15px 2px rgba(205,0,0,1);
+}
+
 #slider {
   margin-top: 80px;
+ 
 }
 
 #speedSlider {
   width: 300px;
+  
 }
 
 .timesig {
@@ -54,21 +92,13 @@ body {
 .record {
   position: relative;
   top: 37px;
-  height: 200px;
-}
-
-
-.sipinning {
-  -webkit-animation-delay: 3s;
   -webkit-animation:spin 2s linear infinite;
   -moz-animation:spin 2s linear infinite;
   animation:spin 2s linear infinite;
-  animation-fill-mode: forward;
+  height: 200px;
 }
 
-.spinstart {
-  -webkit-animation:spin 3s ease-in;
-  animation: spin 3s ease-in;
+.spinning {
 }
 
 .pad {
@@ -85,13 +115,13 @@ body {
   height:150px;
 }
 
-.xarmplay {
+.armplay {
   -webkit-animation: beat 1s ease;
   animation-fill-mode: forwards;
   transform-origin: 80% 16.5%;
 }
 
-.xarmpause {
+.armpause {
   -webkit-animation: beat 1s ease reverse;
   animation-fill-mode: forwards;
   transform-origin: 80% 16.5%;
@@ -99,7 +129,7 @@ body {
 
 .deck {
   background-color: #777;
-  width: 320px;
+  width: 350px;
   padding: 10px;
   margin: 10px;
   height: 80px;
@@ -107,15 +137,13 @@ body {
 
 .deckButton {
   background-color: #222;
-  box-shadow: 0 4px 0 black;
+  box-shadow: 2px 2px 4px black;
   line-height: 50px;
   height: 50px;
   width: 50px;
   margin: 5px;
-  border-radius: 3px;
   float: left;
   cursor: pointer;
-  transition: all .1s linear;
 }
 
 .deckButton:hover {
@@ -123,9 +151,8 @@ body {
 }
 
 .deckButton:active {
-  box-shadow: 0 2px 0 black;
-  transform: translateY(3px);
-
+  box-shadow: 0;
+  background-color: #888;
 }
 
 .turntable {
@@ -135,6 +162,17 @@ body {
   background-size: 280px 280px;
   background-repeat: no-repeat;
 }
+
+/*input[type="range"]  {
+ height: 20px;  
+ border-style: solid;
+ border-width: 10px;
+ border-color: black;
+ 
+}*/
+
+
+
 
 @-moz-keyframes spin { 100% { -moz-transform: rotate(360deg); } }
 @-webkit-keyframes spin { 100% { -webkit-transform: rotate(360deg); } }
