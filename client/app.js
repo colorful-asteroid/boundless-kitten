@@ -10,7 +10,6 @@ var AppModel = Backbone.Model.extend({
     //instatiating both queue collections. 'queueA' and 'queueB' will both be an array of objects
     var queueA = new QueueCollection([]);
     var queueB = new QueueCollection([]);
-    console.log('Loggin queue A: ', queueA);
 
     //setting a queue attribute that will have events: add, playsong, and remove
     this.set('queueA', queueA);
@@ -66,7 +65,7 @@ var SongModel = Backbone.Model.extend({
   //   $('.arm', player).removeClass('armplay');
   //   $('.arm', player).addClass('armpause');
   // },
-  
+
   // This function is called from the html5 player in playerView
   // It triggers an 'ended' event that is listened to by its collection, QueueCollection
   play: function(player){
