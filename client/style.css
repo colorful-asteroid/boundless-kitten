@@ -85,13 +85,13 @@ body {
   height:150px;
 }
 
-.armplay {
+.xarmplay {
   -webkit-animation: beat 1s ease;
   animation-fill-mode: forwards;
   transform-origin: 80% 16.5%;
 }
 
-.armpause {
+.xarmpause {
   -webkit-animation: beat 1s ease reverse;
   animation-fill-mode: forwards;
   transform-origin: 80% 16.5%;
