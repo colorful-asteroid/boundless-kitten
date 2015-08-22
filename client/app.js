@@ -426,46 +426,47 @@ var PlayerView = Backbone.View.extend({
   //callback is invoked when 'ended' is fired (when song is done playing)
   // NOTE: this is triggered by the html 5 player and is being listened for by our
   initialize: function(container) {
-    var armCssRev = {
-        '-webkit-animation': 'beat 1s ease reverse',
-        '-moz-animation': 'beat 1s ease reverse', 
-        'animation': 'beat 1s ease reverse',
-        'animation-fill-mode': 'forwards',
-        'transform-origin': '80% 16.5%'
-      };
+    var spinStart = {
+      '-webkit-animation':'spin 3s ease-in',
+      '-moz-animation':'spin 3s ease-in',
+      'animation':'spin 3s ease-in',
+    }; 
 
-    var armCssPlay = {
-        '-webkit-animation': 'beat 1s ease',
-        '-moz-animation': 'beat 1s ease', 
-        'animation': 'beat 1s ease',
-        'animation-fill-mode': 'forwards',
-        'transform-origin': '80% 16.5%'
-      };
+    var spinning = {
+      '-webkit-animation':'spin 2s linear infinite',
+      '-moz-animation':'spin 2s linear infinite',
+      'animation':'spin 2s linear infinite',
+    };
 
     this.$el.on('ended', (function () { 
       this.model.ended(this.$el);
       var p = this.getPlayer(this.$el);
-      $('.arm', p).css({});
-      $('.arm', p).css(armCssRev);
+      $('.arm', p).removeClass('armplay');
+      $('.arm', p).addClass('armpause');
       $('.record', p).removeClass('spinning');
-      $('.record', p).removeClass('spinstart');
+      $('.record', p).removeAttr('style');
     }).bind(this));
 
     this.$el.on('play', function(){
       this.model.play(this.$el);
       var p = this.getPlayer(this.$el);
-      $('.arm', p).css({});
-      $('.arm', p).css(armCssPlay);
-      $('.record', p).addClass('spinstart');
-      $('.record', p).addClass('spinning');
+      $('.arm', p).removeClass('armpause');
+      $('.arm', p).addClass('armplay');
+      $('.record', p).css(spinStart);
+      setTimeout(function(){
+        if($('.record', p).attr('style')){
+          $('.record', p).addClass('spinning');
+          $('.record', p).css(spinning);
+        }      
+      }, 3000);
     }.bind(this));
 
     this.$el.on('pause', function(){
       var p = this.getPlayer(this.$el);
-      $('.arm', p).css({});
-      $('.arm', p).css(armCssRev);
-      $('.record', p).addClass('spinstart');
+      $('.arm', p).removeClass('armplay');
+      $('.arm', p).addClass('armpause');
       $('.record', p).removeClass('spinning');
+      $('.record', p).removeAttr('style');
     }.bind(this));
 
     //clear song out of player
@@ -660,15 +661,6 @@ $(document).ready(function() {
       autoplay: 'autoplay'
     });
   });
-  console.log('document is ready');
-  $('.record').on(
-    "transitionend MSTransitionEnd webkitTransitionEnd oTransitionEnd",
-    function(){
-      console.log('transitionend');
-      $(this).removeClass("spinstart");
-    }
-  );
-
 
   ////////////////////////////////////////////////////////////////////////////////
   //                                                           MODEL INSTANCES  //
